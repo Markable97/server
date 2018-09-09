@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class ServerMain {
     
-    static ExecutorService executeIt = Executors.newFixedThreadPool(10);
+    static ExecutorService executeIt = Executors.newFixedThreadPool(1);
     
     /**
      * @param args the command line arguments
@@ -110,7 +110,7 @@ class ThreadClient implements Runnable {
       
             String input;
             int id_division = 0, id_tour = 0;
-            while(!fromclient.isClosed()){
+            while(fromclient.isConnected()){
                 System.out.println("Wait message..."); 
                 input = in.readUTF();
                 if(input.equalsIgnoreCase("close")){
