@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class ServerMain {
     
-    static ExecutorService executeIt = Executors.newFixedThreadPool(1);
+    static ExecutorService executeIt = Executors.newFixedThreadPool(10);
     
     /**
      * @param args the command line arguments
