@@ -81,8 +81,8 @@ class ThreadClient implements Runnable {
     ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();//список прошедшего тура в виде массива
     
     DataInputStream in;
-    DataOutputStream outPrevMatches;
-    DataOutputStream outTournamentTable;
+    DataOutputStream out;
+    //DataOutputStream outTournamentTable;
     
     Gson gson = new Gson();
     
@@ -90,8 +90,8 @@ class ThreadClient implements Runnable {
         this.fromclient = client;
         System.out.println(client.getInetAddress() + " connection number = " + numberUser);
         in = new DataInputStream(fromclient.getInputStream());
-        outPrevMatches = new DataOutputStream(fromclient.getOutputStream());
-        outTournamentTable = new DataOutputStream(fromclient.getOutputStream());
+        out = new DataOutputStream(fromclient.getOutputStream());
+        //outTournamentTable = new DataOutputStream(fromclient.getOutputStream());
     }
     
     @Override
@@ -106,7 +106,7 @@ class ThreadClient implements Runnable {
                 input = in.readUTF();
                 if(input.equalsIgnoreCase("close")){
                     System.out.println("Client closes the connection");
-                    outPrevMatches.writeUTF("Disconnect from the server");
+                    out.writeUTF("Disconnect from the server");
                     //out.flush();
                     break;
                 }
@@ -140,8 +140,8 @@ class ThreadClient implements Runnable {
                 System.out.println("[2]Array of object from DB to JSON");
                 System.out.println(prevMatchesToJson);
                 
-                outTournamentTable.writeUTF(tournamentTableToJson);
-                outPrevMatches.writeUTF(prevMatchesToJson);
+                out.writeUTF(tournamentTableToJson);
+                out.writeUTF(prevMatchesToJson);
                 //out.flush();
             }
             /*do{
@@ -160,8 +160,8 @@ class ThreadClient implements Runnable {
             while(!input.equalsIgnoreCase("Close"));*/
             System.out.println("Disconnect client, close channels....");
             in.close();
-            outPrevMatches.close();
-            outTournamentTable.close();
+            out.close();
+            //outTournamentTable.close();
             fromclient.close();
         } catch (IOException ex) {
             
