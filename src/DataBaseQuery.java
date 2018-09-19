@@ -88,7 +88,7 @@ public class DataBaseQuery {
 "join teams h on teams_id_teamHome = h.id_team\n" +
 "join teams g on teams_id_teamVisitor = g.id_team\n" +
 "join divisions d on m.divisions_id_division = id_division\n" +
-"where date between (select min(date) from matches where id_tour = ? and divisions_id_division = ?) and curdate() ;");
+"where id_tour = ? and m.divisions_id_division = ?;");
             prepStateResultsPrevMatches.setInt(1, qTour);
             prepStateResultsPrevMatches.setInt(2, qDiv);
             resultsPrevMatches = prepStateResultsPrevMatches.executeQuery();
