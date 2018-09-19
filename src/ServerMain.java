@@ -1,20 +1,11 @@
 
 import com.google.gson.Gson;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -90,8 +81,8 @@ class ThreadClient implements Runnable {
     ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();//список прошедшего тура в виде массива
     
     DataInputStream in;
-    DataOutputStream outPrevMatches;
-    DataOutputStream outTournamentTable;
+    DataOutputStream out;
+    //DataOutputStream outTournamentTable;
     
     Gson gson = new Gson();
     
@@ -99,8 +90,8 @@ class ThreadClient implements Runnable {
         this.fromclient = client;
         System.out.println(client.getInetAddress() + " connection number = " + numberUser);
         in = new DataInputStream(fromclient.getInputStream());
-        outPrevMatches = new DataOutputStream(fromclient.getOutputStream());
-        outTournamentTable = new DataOutputStream(fromclient.getOutputStream());
+        out = new DataOutputStream(fromclient.getOutputStream());
+        //outTournamentTable = new DataOutputStream(fromclient.getOutputStream());
     }
     
     @Override
@@ -110,12 +101,12 @@ class ThreadClient implements Runnable {
       
             String input;
             int id_division = 0, id_tour = 0;
-            while(!fromclient.isClosed()){
+            while(fromclient.isConnected()){
                 System.out.println("Wait message..."); 
                 input = in.readUTF();
                 if(input.equalsIgnoreCase("close")){
                     System.out.println("Client closes the connection");
-                    outPrevMatches.writeUTF("Disconnect from the server");
+                    out.writeUTF("Disconnect from the server");
                     //out.flush();
                     break;
                 }
@@ -149,8 +140,8 @@ class ThreadClient implements Runnable {
                 System.out.println("[2]Array of object from DB to JSON");
                 System.out.println(prevMatchesToJson);
                 
-                outTournamentTable.writeUTF(tournamentTableToJson);
-                outPrevMatches.writeUTF(prevMatchesToJson);
+                out.writeUTF(tournamentTableToJson);
+                out.writeUTF(prevMatchesToJson);
                 //out.flush();
             }
             /*do{
@@ -169,8 +160,8 @@ class ThreadClient implements Runnable {
             while(!input.equalsIgnoreCase("Close"));*/
             System.out.println("Disconnect client, close channels....");
             in.close();
-            outPrevMatches.close();
-            outTournamentTable.close();
+            out.close();
+            //outTournamentTable.close();
             fromclient.close();
         } catch (IOException ex) {
             
