@@ -1,7 +1,10 @@
 
 import com.google.gson.Gson;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -112,6 +115,13 @@ class ThreadClient implements Runnable {
                 }
                 
                 System.out.println("Добавляю потоки для файлов");
+                File image = new File("D:\\Учеба\\Диплом\\картинка.png");
+                byte[] byteArray = new byte[(int)image.length()];
+                BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                stream.read(byteArray, 0, byteArray.length);
+                stream.close();
+                System.out.println("Кол-во байтов " + byteArray.length);
+                out.write(byteArray, 0, byteArray.length);
                 
                 System.out.println("String received from the client = " + input);
                 MessageToJson messageToJson = gson.fromJson(input, MessageToJson.class);
