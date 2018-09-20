@@ -72,7 +72,7 @@ public class DataBaseQuery {
             connect = DriverManager.getConnection(url, user, password);
             statment = connect.createStatement();
             //results = statment.executeQuery(query);
-            prepStateTable = connect.prepareStatement("SELECT  name_division, team_name, games,point,wins,draws,losses\n" +
+            prepStateTable = connect.prepareStatement("SELECT  name_division, team_name, games,point,wins,draws,losses,logo\n" +
 "FROM footbal_database.tournament_table j\n" +
 "join divisions d on id_division = j.divisions_id_division\n" +
 "join teams t on id_team = teams_id_team\n" +
@@ -139,9 +139,10 @@ public class DataBaseQuery {
                 int wins = result.getInt("wins");
                 int draws = result.getInt("draws");
                 int losses = result.getInt("losses");
-                tournamentArray.add(new TournamentTable(nameDivision, teamName, games, point, wins, draws, losses));
+                String logo = result.getString("logo");
+                tournamentArray.add(new TournamentTable(nameDivision, teamName, games, point, wins, draws, losses, logo));
                 queryOutput += nameDivision + " " + teamName + " " + games + " " + point + " " + wins + " "  + draws + " "
-                        + losses + "\n";
+                        + losses + " "+ logo + "\n";
             }
            System.out.println("[1]Вывод запроса из класса БД \n" + queryOutput);
         } catch (SQLException ex) {
