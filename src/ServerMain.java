@@ -115,7 +115,7 @@ class ThreadClient implements Runnable {
                 }
                 
                 System.out.println("Добавляю потоки для файлов");
-                File image = new File("D:\\Учеба\\Диплом\\картинка.png");
+                File image = new File("D:\\Учеба\\Диплом\\селтик_small.png");
                 byte[] byteArray = new byte[(int)image.length()];
                 BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
                 stream.read(byteArray, 0, byteArray.length);
