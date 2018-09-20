@@ -114,14 +114,6 @@ class ThreadClient implements Runnable {
                     break;
                 }
                 
-                System.out.println("Добавляю потоки для файлов");
-                File image = new File("D:\\Учеба\\Диплом\\селтик_small.png");
-                byte[] byteArray = new byte[(int)image.length()];
-                BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
-                stream.read(byteArray, 0, byteArray.length);
-                stream.close();
-                System.out.println("Кол-во байтов " + byteArray.length);
-                out.write(byteArray, 0, byteArray.length);
                 
                 System.out.println("String received from the client = " + input);
                 MessageToJson messageToJson = gson.fromJson(input, MessageToJson.class);
@@ -155,6 +147,33 @@ class ThreadClient implements Runnable {
                 
                 out.writeUTF(tournamentTableToJson);
                 out.writeUTF(prevMatchesToJson);
+                
+                System.out.println("Добавляю потоки для файлов");
+                String path = "D:\\Учеба\\Диплом\\Логотипы команд\\Высший див\\";
+                
+                for(int i = 0;i < tournamentArray.size(); i++){
+                   File image = new File(path + tournamentArray.get(i).getUrlImage());
+                   if(image.exists()){
+                       System.out.println("Файл существует " + image.getName());
+                       byte[] byteArray = new byte[(int)image.length()];
+                       BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                       stream.read(byteArray, 0, byteArray.length);
+                       stream.close();
+                       System.out.println("Кол-во байтов " + byteArray.length);
+                       out.write(byteArray, 0, byteArray.length);
+                   }else{
+                       System.out.println("Файл не сущуствует");
+                   }
+                }
+                
+                /*File image = new File(path + "авангард.logo.png");
+                byte[] byteArray = new byte[(int)image.length()];
+                BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                stream.read(byteArray, 0, byteArray.length);
+                stream.close();
+                System.out.println("Кол-во байтов " + byteArray.length);
+                out.write(byteArray, 0, byteArray.length);*/
+                
                 //out.flush();
             }
             /*do{
