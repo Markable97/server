@@ -150,7 +150,6 @@ class ThreadClient implements Runnable {
                 
                 System.out.println("Добавляю потоки для файлов");
                 String path = "D:\\Учеба\\Диплом\\Логотипы команд\\Высший див\\";
-                
                 for(int i = 0;i < tournamentArray.size(); i++){
                    File image = new File(path + tournamentArray.get(i).getUrlImage());
                    if(image.exists()){
@@ -160,19 +159,12 @@ class ThreadClient implements Runnable {
                        stream.read(byteArray, 0, byteArray.length);
                        stream.close();
                        System.out.println("Кол-во байтов " + byteArray.length);
-                       out.write(byteArray, 0, byteArray.length);
+                       out.writeInt(byteArray.length);
+                       out.write(byteArray, 0, byteArray.length);;
                    }else{
-                       System.out.println("Файл не сущуствует");
+                       System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                    }
                 }
-                
-                /*File image = new File(path + "авангард.logo.png");
-                byte[] byteArray = new byte[(int)image.length()];
-                BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
-                stream.read(byteArray, 0, byteArray.length);
-                stream.close();
-                System.out.println("Кол-во байтов " + byteArray.length);
-                out.write(byteArray, 0, byteArray.length);*/
                 
                 //out.flush();
             }
