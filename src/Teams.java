@@ -16,7 +16,7 @@ public class Teams implements Serializable{
     private String name;
     private String creation_date;
     private int id_division;
-    
+  
     public Teams(int id, String name, String date, int id_division){
         setId(id);
         setName(name);
@@ -24,16 +24,16 @@ public class Teams implements Serializable{
         setIdDivision(id_division);
     }
     
-    void setId(int id){
+    private void setId(int id){
         this.id = id;
     }
-    void setName(String name){
+    private void setName(String name){
         this.name = name;
     }
-    void setDate(String date){
+    private void setDate(String date){
         this.creation_date = date;
     }
-    void setIdDivision(int id){
+    private void setIdDivision(int id){
         this.id_division = id;
     }
     
@@ -49,4 +49,4 @@ public class Teams implements Serializable{
     int getIdDivision(){
         return this.id_division;
     }
-}
+    }

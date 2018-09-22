@@ -20,8 +20,9 @@ public class TournamentTable implements Serializable {
     private int wins;
     private int draws;
     private int losses;
+    private transient String urlImage;
    
-    public TournamentTable(String division, String team, int games, int point, int wins, int draws, int losses){
+    public TournamentTable(String division, String team, int games, int point, int wins, int draws, int losses, String urlImage){
         setDivision(division);
         setTeam(team);
         setPoint(point);
@@ -29,6 +30,8 @@ public class TournamentTable implements Serializable {
         setWins(wins);
         setDraws(draws);
         setLosses(losses);
+        setUrlImage(urlImage);
+        
     }
 
     private void setDivision(String division) {
@@ -82,5 +85,11 @@ public class TournamentTable implements Serializable {
 
     public int getLosses() {
         return losses;
+    }
+    public String getUrlImage() {
+        return urlImage;
+    }
+    private void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 }

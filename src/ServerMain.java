@@ -1,7 +1,10 @@
 
 import com.google.gson.Gson;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -110,6 +113,8 @@ class ThreadClient implements Runnable {
                     //out.flush();
                     break;
                 }
+                
+                
                 System.out.println("String received from the client = " + input);
                 MessageToJson messageToJson = gson.fromJson(input, MessageToJson.class);
                 id_division = messageToJson.getId_division();
@@ -142,6 +147,26 @@ class ThreadClient implements Runnable {
                 
                 out.writeUTF(tournamentTableToJson);
                 out.writeUTF(prevMatchesToJson);
+                
+                System.out.println("Добавляю потоки для файлов");
+                String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
+                out.writeInt(tournamentArray.size());
+                for(int i = 0;i < tournamentArray.size(); i++){
+                   File image = new File(path + tournamentArray.get(i).getUrlImage());
+                   if(image.exists()){
+                       System.out.println("Файл существует " + image.getName());
+                       byte[] byteArray = new byte[(int)image.length()];
+                       BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                       stream.read(byteArray, 0, byteArray.length);
+                       stream.close();
+                       System.out.println("Кол-во байтов " + byteArray.length);
+                       out.writeInt(byteArray.length);
+                       out.write(byteArray, 0, byteArray.length);;
+                   }else{
+                       System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                   }
+                }
+                
                 //out.flush();
             }
             /*do{
