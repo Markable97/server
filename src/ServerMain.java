@@ -161,7 +161,8 @@ class ThreadClient implements Runnable {
                        stream.close();
                        System.out.println("Кол-во байтов " + byteArray.length);
                        out.writeInt(byteArray.length);
-                       out.write(byteArray, 0, byteArray.length);;
+                       out.write(byteArray);
+                       //out.flush();
                    }else{
                        System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                    }
