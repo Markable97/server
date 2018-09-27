@@ -20,6 +20,7 @@ public class TournamentTable implements Serializable {
     private int wins;
     private int draws;
     private int losses;
+    private int goalScored;
     private transient String urlImage;
    
     public TournamentTable(String division, String team, int games, int point, int wins, int draws, int losses, String urlImage){
