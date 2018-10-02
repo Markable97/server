@@ -93,7 +93,7 @@ public class DataBaseQuery {
             prepStateResultsPrevMatches.setInt(1, qDiv);
             resultsPrevMatches = prepStateResultsPrevMatches.executeQuery();
             resultsPrevMatchesByDivision(resultsPrevMatches);
-            
+            //Работа с календарем
             /* запрос на календарь
             SELECT  name_division, id_tour,h.team_name, g.team_name, date, name_stadium
 FROM footbal_database.matches m
