@@ -88,11 +88,22 @@ public class DataBaseQuery {
 "join teams h on teams_id_teamHome = h.id_team\n" +
 "join teams g on teams_id_teamVisitor = g.id_team\n" +
 "join divisions d on m.divisions_id_division = id_division\n" +
-"where id_tour = ? and m.divisions_id_division = ?;");
-            prepStateResultsPrevMatches.setInt(1, qTour);
-            prepStateResultsPrevMatches.setInt(2, qDiv);
+"where  (to_days(curdate()) - to_days(date) ) >= 0 and (to_days(curdate()) - to_days(date)) < 8 and m.divisions_id_division = ?\n" +
+"order by date;");
+            prepStateResultsPrevMatches.setInt(1, qDiv);
             resultsPrevMatches = prepStateResultsPrevMatches.executeQuery();
             resultsPrevMatchesByDivision(resultsPrevMatches);
+            
+            /* запрос на календарь
+            SELECT  name_division, id_tour,h.team_name, g.team_name, date, name_stadium
+FROM footbal_database.matches m
+join teams h on teams_id_teamHome = h.id_team
+join teams g on teams_id_teamVisitor = g.id_team
+join stadiums s on stadiums_id_stadium = s.id_stadium
+join divisions d on m.divisions_id_division = id_division
+where date >= curdate() and m.divisions_id_division = 2
+order by date;
+             */
             /*while(results.next()){
                 int id = results.getInt("id_team");
                 String team_name = results.getString("team_name");
