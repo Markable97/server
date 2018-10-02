@@ -32,35 +32,34 @@ public class DataBaseQuery {
     private static ResultSet resultsPrevMatches; 
     private static ResultSet calendarNextMatches;
     
-    private static ArrayList<Teams> teamsAllArray  = new ArrayList<Teams>();
     private static ArrayList<TournamentTable> tournamentArray = new ArrayList<TournamentTable>();
     private static ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();
+    private static ArrayList<NextMatches> nextMatchesArray = new ArrayList<>();
     //private static String outputQuery = "";
 
-    
+   
     public DataBaseQuery(int dataDivision, int dataTour){
         queryDivision = dataDivision;
         queryTour = dataTour;
-        teamsAllArray.clear();
         tournamentArray.clear();
         prevMatchesArray.clear();
+        nextMatchesArray.clear();
        //queryOutput="";
         connection(queryDivision, queryTour);
     }
     
     
    ArrayList<TournamentTable> getTournamentTable(){
-       return this.tournamentArray;
+       return DataBaseQuery.tournamentArray;
    }
    
    ArrayList<PrevMatches> getResultsPrevMatches(){
-       return this.prevMatchesArray;
+       return DataBaseQuery.prevMatchesArray;
    }
    
-    ArrayList<Teams> getTeamListDivision(){
-        //return queryOutput;
-        return this.teamsAllArray;
-    }
+   ArrayList<NextMatches> getCalendar(){
+       return DataBaseQuery.nextMatchesArray;
+   }
     String getQueryOutput(){
         return queryOutput;
     }
@@ -93,17 +92,18 @@ public class DataBaseQuery {
             prepStateResultsPrevMatches.setInt(1, qDiv);
             resultsPrevMatches = prepStateResultsPrevMatches.executeQuery();
             resultsPrevMatchesByDivision(resultsPrevMatches);
-            //Работа с календарем
-            /* запрос на календарь
-            SELECT  name_division, id_tour,h.team_name, g.team_name, date, name_stadium
-FROM footbal_database.matches m
-join teams h on teams_id_teamHome = h.id_team
-join teams g on teams_id_teamVisitor = g.id_team
-join stadiums s on stadiums_id_stadium = s.id_stadium
-join divisions d on m.divisions_id_division = id_division
-where date >= curdate() and m.divisions_id_division = 2
-order by date;
-             */
+            
+            prepStateCalendarNextMatches = connect.prepareStatement("SELECT  name_division, id_tour,h.team_name, g.team_name, date, name_stadium\n" +
+"FROM footbal_database.matches m\n" +
+"join teams h on teams_id_teamHome = h.id_team\n" +
+"join teams g on teams_id_teamVisitor = g.id_team\n" +
+"join stadiums s on stadiums_id_stadium = s.id_stadium\n" +
+"join divisions d on m.divisions_id_division = id_division\n" +
+"where date >= curdate() and m.divisions_id_division = ?\n" +
+"order by date;");
+            prepStateCalendarNextMatches.setInt(1,qDiv);     
+            calendarNextMatches = prepStateCalendarNextMatches.executeQuery();
+            calendarResults(calendarNextMatches);
             /*while(results.next()){
                 int id = results.getInt("id_team");
                 String team_name = results.getString("team_name");
@@ -186,4 +186,24 @@ order by date;
         }
        
     }
+    
+    private static void calendarResults(ResultSet result) {
+            String queryOutput = "";
+            try{
+                while(result.next()){
+                    String nameDivision = result.getString("name_division");
+                    int idTour = result.getInt("id_tour");
+                    String teamHome = result.getString("h.team_name");
+                    String teamVisit = result.getString("g.team_name");
+                    String date = result.getString("date");
+                    String nameStadium = result.getString("name_stadium");
+                    nextMatchesArray.add(new NextMatches(nameDivision, idTour, teamHome, teamVisit, date, nameStadium));
+                    queryOutput += nameDivision + " " + idTour + " " +teamHome +  " " + teamVisit + " " 
+                            + date + " " + nameStadium + "\n";
+                }
+                System.out.println("[3]Вывод запроса из класса БД \n" + queryOutput);
+            }catch(SQLException ex){
+                Logger.getLogger(DataBaseQuery.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 }
