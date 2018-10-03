@@ -155,7 +155,7 @@ class ThreadClient implements Runnable {
                 out.writeUTF(tournamentTableToJson);
                 out.writeUTF(prevMatchesToJson);
                 out.writeUTF(nextMatchesToJson);
-                
+                //начало ветки
                 System.out.println("Добавляю потоки для файлов");
                 String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                 out.writeInt(tournamentArray.size());
