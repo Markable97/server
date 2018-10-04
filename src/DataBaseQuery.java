@@ -93,7 +93,8 @@ public class DataBaseQuery {
             resultsPrevMatches = prepStateResultsPrevMatches.executeQuery();
             resultsPrevMatchesByDivision(resultsPrevMatches);
             
-            prepStateCalendarNextMatches = connect.prepareStatement("SELECT  name_division, id_tour,h.team_name, g.team_name, date, name_stadium\n" +
+            prepStateCalendarNextMatches = connect.prepareStatement("SELECT  name_division, id_tour,h.team_name, g.team_name, DATE_FORMAT((date), \n" +
+"CONCAT(' %d, ', ELT( MONTH((date)), 'Янв.','Фев.','Мар.','Апр.','Май.','Июн.','Июл.','Авг.','Сен.','Окт.','Ноя.','Дек.'),' %H:%i')), name_stadium\n" +
 "FROM footbal_database.matches m\n" +
 "join teams h on teams_id_teamHome = h.id_team\n" +
 "join teams g on teams_id_teamVisitor = g.id_team\n" +
@@ -195,7 +196,7 @@ public class DataBaseQuery {
                     int idTour = result.getInt("id_tour");
                     String teamHome = result.getString("h.team_name");
                     String teamVisit = result.getString("g.team_name");
-                    String date = result.getString("date");
+                    String date = result.getString(5);
                     String nameStadium = result.getString("name_stadium");
                     nextMatchesArray.add(new NextMatches(nameDivision, idTour, teamHome, teamVisit, date, nameStadium));
                     queryOutput += nameDivision + " " + idTour + " " +teamHome +  " " + teamVisit + " " 
