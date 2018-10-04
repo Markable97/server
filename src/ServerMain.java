@@ -79,9 +79,10 @@ class ThreadClient implements Runnable {
 
     Socket fromclient;
     
-    ArrayList<Teams> teamsArray  = new ArrayList();//лист массив для объктов
+    
     ArrayList<TournamentTable> tournamentArray = new ArrayList<>();//турнирная таблица в виде массива
     ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();//список прошедшего тура в виде массива
+    ArrayList<NextMatches> nextMatchesArray = new ArrayList<>();//список на следующие игры
     
     DataInputStream in;
     DataOutputStream out;
@@ -140,14 +141,21 @@ class ThreadClient implements Runnable {
                 
                 prevMatchesArray = baseQuery.getResultsPrevMatches();
                 String prevMatchesToJson = gson.toJson(prevMatchesArray);
+                
+                nextMatchesArray = baseQuery.getCalendar();
+                String nextMatchesToJson = gson.toJson(nextMatchesArray);
+                
                 System.out.println("[1]Array of object from DB to JSON");
                 System.out.println(tournamentTableToJson);
                 System.out.println("[2]Array of object from DB to JSON");
                 System.out.println(prevMatchesToJson);
+                System.out.println("[3]Array of object from DB to JSON");
+                System.out.println(nextMatchesToJson);
                 
                 out.writeUTF(tournamentTableToJson);
                 out.writeUTF(prevMatchesToJson);
-                
+                out.writeUTF(nextMatchesToJson);
+                //начало ветки
                 System.out.println("Добавляю потоки для файлов");
                 String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                 out.writeInt(tournamentArray.size());
@@ -155,11 +163,13 @@ class ThreadClient implements Runnable {
                    File image = new File(path + tournamentArray.get(i).getUrlImage());
                    if(image.exists()){
                        System.out.println("Файл существует " + image.getName());
+                       String nameImage = tournamentArray.get(i).getUrlImage().replace(".png","");
                        byte[] byteArray = new byte[(int)image.length()];
                        BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
                        stream.read(byteArray, 0, byteArray.length);
                        stream.close();
                        System.out.println("Кол-во байтов " + byteArray.length);
+                       out.writeUTF(nameImage);
                        out.writeInt(byteArray.length);
                        out.write(byteArray);
                        //out.flush();
