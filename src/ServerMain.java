@@ -155,7 +155,7 @@ class ThreadClient implements Runnable {
                 out.writeUTF(tournamentTableToJson);
                 out.writeUTF(prevMatchesToJson);
                 out.writeUTF(nextMatchesToJson);
-                
+                //начало ветки
                 System.out.println("Добавляю потоки для файлов");
                 String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                 out.writeInt(tournamentArray.size());
@@ -163,11 +163,13 @@ class ThreadClient implements Runnable {
                    File image = new File(path + tournamentArray.get(i).getUrlImage());
                    if(image.exists()){
                        System.out.println("Файл существует " + image.getName());
+                       String nameImage = tournamentArray.get(i).getUrlImage().replace(".png","");
                        byte[] byteArray = new byte[(int)image.length()];
                        BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
                        stream.read(byteArray, 0, byteArray.length);
                        stream.close();
                        System.out.println("Кол-во байтов " + byteArray.length);
+                       out.writeUTF(nameImage);
                        out.writeInt(byteArray.length);
                        out.write(byteArray);
                        //out.flush();
