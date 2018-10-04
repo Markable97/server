@@ -168,6 +168,7 @@ class ThreadClient implements Runnable {
                        stream.read(byteArray, 0, byteArray.length);
                        stream.close();
                        System.out.println("Кол-во байтов " + byteArray.length);
+                       out.writeUTF(tournamentArray.get(i).getUrlImage());
                        out.writeInt(byteArray.length);
                        out.write(byteArray);
                        //out.flush();
