@@ -44,9 +44,9 @@ public class DataBaseQuery {
         tournamentArray.clear();
         prevMatchesArray.clear();
         nextMatchesArray.clear();
-       //queryOutput="";
-        connection(queryDivision, queryTour);
-    }
+            //queryOutput="";
+            connection(queryDivision, queryTour);
+        }
     
     
    ArrayList<TournamentTable> getTournamentTable(){
