@@ -12,6 +12,8 @@ public class Player {
     
     private String playerName;
     transient String playerUrlImage;
+    String birhtday;
+    String amplua;
     private int games;
     private int goal;
     private int assist;
