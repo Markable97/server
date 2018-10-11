@@ -79,6 +79,10 @@ class ThreadClient implements Runnable {
 
     Socket fromclient;
     
+    String input;
+    String messageLogic;
+    int id_division;
+    int id_team;
     
     ArrayList<TournamentTable> tournamentArray = new ArrayList<>();//турнирная таблица в виде массива
     ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();//список прошедшего тура в виде массива
@@ -87,6 +91,8 @@ class ThreadClient implements Runnable {
     DataInputStream in;
     DataOutputStream out;
     //DataOutputStream outTournamentTable;
+    
+    MessageToJson messageToJson;
     
     Gson gson = new Gson();
     
@@ -102,111 +108,103 @@ class ThreadClient implements Runnable {
     public void run() {
         try {
             System.out.println("Сlient is connected");
-      
-            String input;
-            int id_division = 0, id_tour = 0;
+            exit:
             while(fromclient.isConnected()){
                 System.out.println("Wait message..."); 
                 input = in.readUTF();
-                if(input.equalsIgnoreCase("close")){
-                    System.out.println("Client closes the connection");
-                    out.writeUTF("Disconnect from the server");
-                    //out.flush();
-                    break;
-                }
-                System.out.println("new branch locig server");
-                
+               
+                //System.out.println("new branch locig server");
+               
                 System.out.println("String received from the client = " + input);
-                MessageToJson messageToJson = gson.fromJson(input, MessageToJson.class);
+                messageToJson = gson.fromJson(input, MessageToJson.class);
                 id_division = messageToJson.getId_division();
-                id_tour = messageToJson.getId_tour();
-                DataBaseQuery baseQuery = new DataBaseQuery(id_division, id_tour);//объект класса с соедиением и запросом к бд
-                //out.writeUTF(input.toUpperCase()); //переда клиенту в большом регистре
+                messageLogic = messageToJson.getMessageLogic();
+                id_team = messageToJson.getId_team();
+                switch(messageLogic){
+                    case "close":
+                        System.out.println("Client closes the connection");
+                        fromclient.close();
+                        break exit;
+                    case "division":
+                        DataBaseQuery baseQuery = new DataBaseQuery(id_division);//объект класса с соедиением и запросом к бд
+                         //out.writeUTF(input.toUpperCase()); //переда клиенту в большом регистре
                 
-               // teamsArray = baseQuery.getTeamListDivision();//массиву присваевается массив объектов из запроса к бд
-                //System.out.println("[1]Массив объектов из бд в JSON");
-                //String teamsArrayToJson = gson.toJson(teamsArray);
-               // System.out.println(teamsArrayToJson);
-                /*System.out.println("Обычный перебор массива из бд");
-                for (Teams test : teamsArray) {
-                    System.out.println(test.getId() + " " + test.getName() + " " + test.getDate() + " "
-                    + test.getIdDivision());
-                }*/
-                //testOu.writeObject(teamsArray);//передача потока клиенту(массив объектов)
-                //out.writeUTF(baseQuery.getQueryOutput());//передача выполненного запроса(строкая переменная)
-                //outListTeams.writeUTF(teamsArrayToJson);
+                        // teamsArray = baseQuery.getTeamListDivision();//массиву присваевается массив объектов из запроса к бд
+                         //System.out.println("[1]Массив объектов из бд в JSON");
+                        //String teamsArrayToJson = gson.toJson(teamsArray);
+                        // System.out.println(teamsArrayToJson);
+                        /*System.out.println("Обычный перебор массива из бд");
+                         for (Teams test : teamsArray) {
+                         System.out.println(test.getId() + " " + test.getName() + " " + test.getDate() + " "
+                         + test.getIdDivision());
+                        }*/
+                         //testOu.writeObject(teamsArray);//передача потока клиенту(массив объектов)
+                         //out.writeUTF(baseQuery.getQueryOutput());//передача выполненного запроса(строкая переменная)
+                         //outListTeams.writeUTF(teamsArrayToJson);
                 
-                tournamentArray = baseQuery.getTournamentTable();
-                String tournamentTableToJson = gson.toJson(tournamentArray);
+                        tournamentArray = baseQuery.getTournamentTable();
+                        String tournamentTableToJson = gson.toJson(tournamentArray);
                 
-                prevMatchesArray = baseQuery.getResultsPrevMatches();
-                String prevMatchesToJson = gson.toJson(prevMatchesArray);
+                        prevMatchesArray = baseQuery.getResultsPrevMatches();
+                        String prevMatchesToJson = gson.toJson(prevMatchesArray);
                 
-                nextMatchesArray = baseQuery.getCalendar();
-                String nextMatchesToJson = gson.toJson(nextMatchesArray);
+                        nextMatchesArray = baseQuery.getCalendar();
+                        String nextMatchesToJson = gson.toJson(nextMatchesArray);
                 
-                System.out.println("[1]Array of object from DB to JSON");
-                System.out.println(tournamentTableToJson);
-                System.out.println("[2]Array of object from DB to JSON");
-                System.out.println(prevMatchesToJson);
-                System.out.println("[3]Array of object from DB to JSON");
-                System.out.println(nextMatchesToJson);
-                System.out.println("New branch");
-                out.writeUTF(tournamentTableToJson);
-                out.writeUTF(prevMatchesToJson);
-                out.writeUTF(nextMatchesToJson);
-                //начало ветки
-                System.out.println("Добавляю потоки для файлов");
-                String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
-                String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
-                out.writeInt(tournamentArray.size());
-                for(int i = 0; i < tournamentArray.size(); i++){
-                   File image = new File(path + tournamentArray.get(i).getUrlImage());
-                   File imageBig = new File(pathBig + tournamentArray.get(i).getUrlImage());
-                   if(image.exists()){
-                       if(imageBig.exists()){
-                           System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
-                           String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
-                           byte[] byteArray = new byte[(int)image.length()];
-                           BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
-                           stream.read(byteArray, 0, byteArray.length);
-                           stream.close();
-                           System.out.println("Кол-во байтов " + byteArray.length);
-                           out.writeUTF(nameImage);
-                           out.writeInt(byteArray.length);
-                           out.write(byteArray);
-                           byte[] byteArrayBig = new byte[(int)imageBig.length()];
-                           BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
-                           streamBig.read(byteArrayBig, 0, byteArrayBig.length);
-                           streamBig.close();
-                           out.writeInt(byteArrayBig.length);
-                           out.write(byteArrayBig);
-                           //out.flush();
-                       }else{
-                           System.out.println("BIG Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                       }
-                   }else{
-                       System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                   }
-                }
-                
-                //out.flush();
-            }
-            /*do{
-                System.out.println("Ожидание сообщения..."); 
-                input = in.readUTF();
-                if(input.equals("close")){
-                    out.flush();
-                    break;
-                }
-                System.out.println("Стркоа пришла от клиента = " + input);
-                DataBaseQuery baseQuery = new DataBaseQuery(input);//объект класса с соедиением и запросом к бд
-                //out.writeUTF(input.toUpperCase()); //переда клиенту в большом регистре
-                out.writeUTF(baseQuery.getQueryOutput());//передача выполненного запроса
-                out.flush();
-            }
-            while(!input.equalsIgnoreCase("Close"));*/
+                        System.out.println("[1]Array of object from DB to JSON");
+                        System.out.println(tournamentTableToJson);
+                        System.out.println("[2]Array of object from DB to JSON");
+                        System.out.println(prevMatchesToJson);
+                        System.out.println("[3]Array of object from DB to JSON");
+                        System.out.println(nextMatchesToJson);
+                        System.out.println("New branch");
+                        out.writeUTF(tournamentTableToJson);
+                        out.writeUTF(prevMatchesToJson);
+                        out.writeUTF(nextMatchesToJson);
+                        //начало ветки
+                        System.out.println("Добавляю потоки для файлов");
+                        String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
+                        String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
+                        out.writeInt(tournamentArray.size());
+                        for(int i = 0; i < tournamentArray.size(); i++){
+                            File image = new File(path + tournamentArray.get(i).getUrlImage());
+                            File imageBig = new File(pathBig + tournamentArray.get(i).getUrlImage());
+                            if(image.exists()){
+                                if(imageBig.exists()){
+                                    System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
+                                    String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
+                                    byte[] byteArray = new byte[(int)image.length()];
+                                    BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                                    stream.read(byteArray, 0, byteArray.length);
+                                    stream.close();
+                                    System.out.println("Кол-во байтов " + byteArray.length);
+                                    out.writeUTF(nameImage);
+                                    out.writeInt(byteArray.length);
+                                    out.write(byteArray);
+                                    byte[] byteArrayBig = new byte[(int)imageBig.length()];
+                                    BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
+                                    streamBig.read(byteArrayBig, 0, byteArrayBig.length);
+                                    streamBig.close();
+                                    out.writeInt(byteArrayBig.length);
+                                    out.write(byteArrayBig);
+                                    //out.flush();
+                                }else{
+                                    System.out.println("BIG Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                    }
+                            }else{
+                                System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        }
+                        break;
+                    case "team":
+                        break;
+                    case "player":
+                        break;
+                }//case 
+            }//while 
+           
             System.out.println("Disconnect client, close channels....");
+            System.out.println("waiting for a new client*********");
             in.close();
             out.close();
             //outTournamentTable.close();

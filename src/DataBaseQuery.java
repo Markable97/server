@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class DataBaseQuery {
     
     private static int queryDivision;
-    private static int queryTour;
     private static String queryOutput="";
     
     private static String user = "root";
@@ -38,14 +37,13 @@ public class DataBaseQuery {
     //private static String outputQuery = "";
 
    
-    public DataBaseQuery(int dataDivision, int dataTour){
+    public DataBaseQuery(int dataDivision){
         queryDivision = dataDivision;
-        queryTour = dataTour;
         tournamentArray.clear();
         prevMatchesArray.clear();
         nextMatchesArray.clear();
             //queryOutput="";
-            connection(queryDivision, queryTour);
+            connection(queryDivision);
         }
     
     
@@ -66,7 +64,7 @@ public class DataBaseQuery {
     
    
     
-    private static void connection(int qDiv, int qTour){
+    private static void connection(int qDiv){
         try {
             connect = DriverManager.getConnection(url, user, password);
             statment = connect.createStatement();
