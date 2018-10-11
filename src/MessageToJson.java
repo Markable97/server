@@ -32,4 +32,10 @@ public class MessageToJson {
     public int getId_team() {
         return id_team;
     }
+
+    @Override
+    public String toString() {
+        return "MessageToJson{" + "messageLogic=" + messageLogic + ", id_division=" + id_division + ", id_team=" + id_team + '}';
+    }
+    
 }

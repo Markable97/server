@@ -84,9 +84,10 @@ class ThreadClient implements Runnable {
     int id_division;
     int id_team;
     
-    ArrayList<TournamentTable> tournamentArray = new ArrayList<>();//турнирная таблица в виде массива
-    ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();//список прошедшего тура в виде массива
-    ArrayList<NextMatches> nextMatchesArray = new ArrayList<>();//список на следующие игры
+    ArrayList<TournamentTable> tournamentArray;//турнирная таблица в виде массива
+    ArrayList<PrevMatches> prevMatchesArray;//список прошедшего тура в виде массива
+    ArrayList<NextMatches> nextMatchesArray;//список на следующие игры
+    ArrayList<Player> playersArray;//список игроков одной команды
     
     DataInputStream in;
     DataOutputStream out;
@@ -117,6 +118,7 @@ class ThreadClient implements Runnable {
                
                 System.out.println("String received from the client = " + input);
                 messageToJson = gson.fromJson(input, MessageToJson.class);
+                System.out.println(messageToJson.toString());
                 id_division = messageToJson.getId_division();
                 messageLogic = messageToJson.getMessageLogic();
                 id_team = messageToJson.getId_team();
@@ -126,7 +128,7 @@ class ThreadClient implements Runnable {
                         fromclient.close();
                         break exit;
                     case "division":
-                        DataBaseQuery baseQuery = new DataBaseQuery(id_division);//объект класса с соедиением и запросом к бд
+                        DataBaseQuery baseQuery = new DataBaseQuery(id_division, id_team);//объект класса с соедиением и запросом к бд
                          //out.writeUTF(input.toUpperCase()); //переда клиенту в большом регистре
                 
                         // teamsArray = baseQuery.getTeamListDivision();//массиву присваевается массив объектов из запроса к бд
@@ -197,6 +199,13 @@ class ThreadClient implements Runnable {
                         }
                         break;
                     case "team":
+                        System.out.println("Case team");
+                        DataBaseQuery baseQuery1 = new DataBaseQuery(id_division, id_team);
+                        playersArray = baseQuery1.getPlayerArray();
+                        String playersToJson = gson.toJson(playersArray);
+                        System.out.println("[4]Array of object from DB to JSON");
+                        System.out.println(playersToJson);
+                        out.writeUTF(playersToJson);
                         break;
                     case "player":
                         break;
