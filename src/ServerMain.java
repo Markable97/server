@@ -114,7 +114,7 @@ class ThreadClient implements Runnable {
                     //out.flush();
                     break;
                 }
-                
+                System.out.println("new branch locig server");
                 
                 System.out.println("String received from the client = " + input);
                 MessageToJson messageToJson = gson.fromJson(input, MessageToJson.class);
