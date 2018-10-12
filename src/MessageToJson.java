@@ -11,10 +11,10 @@
 public class MessageToJson {
     private String messageLogic;
     private int id_division;
-    private int id_team;
+    private String id_team;
     
 
-    public MessageToJson(String messageLogic, int id_division, int id_team) {
+    public MessageToJson(String messageLogic, int id_division, String id_team) {
         this.messageLogic = messageLogic;
         this.id_division = id_division;
         this.id_team = id_team;
@@ -29,7 +29,7 @@ public class MessageToJson {
         return id_division;
     }
 
-    public int getId_team() {
+    public String getId_team() {
         return id_team;
     }
 

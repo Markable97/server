@@ -82,7 +82,7 @@ class ThreadClient implements Runnable {
     String input;
     String messageLogic;
     int id_division;
-    int id_team;
+    String id_team;
     
     ArrayList<TournamentTable> tournamentArray;//турнирная таблица в виде массива
     ArrayList<PrevMatches> prevMatchesArray;//список прошедшего тура в виде массива

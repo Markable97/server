@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class DataBaseQuery {
     
     private static int queryDivision;
-    private static int queryTeam;
+    private static String queryTeam;
     private static String queryOutput="";
     
     private static String user = "root";
@@ -41,7 +41,7 @@ public class DataBaseQuery {
     //private static String outputQuery = "";
 
    
-    public DataBaseQuery(int dataDivision, int dataTeam){
+    public DataBaseQuery(int dataDivision, String dataTeam){
         queryDivision = dataDivision;
         queryTeam = dataTeam;
         tournamentArray.clear();
@@ -74,7 +74,7 @@ public class DataBaseQuery {
     
    
     
-    private static void connection(int qDiv, int qTeam){
+    private static void connection(int qDiv, String qTeam){
         try {
             connect = DriverManager.getConnection(url, user, password);
             statment = connect.createStatement();
@@ -119,8 +119,8 @@ public class DataBaseQuery {
 "join amplua a on id_amplua = p.amplua_id_amplua\n" +
 "join teams t on id_team = p.teams_id_team\n" +
 "join players_statistics ps on ps.players_id_player = p.id_player\n" +
-"where id_team = ?;");
-            prepStatePlayerInfo.setInt(1, qTeam);
+"where team_name like ?;");
+            prepStatePlayerInfo.setString(1, qTeam);
             resultPlayerInfo = prepStatePlayerInfo.executeQuery();
             playerInfo(resultPlayerInfo);
             /*while(results.next()){
