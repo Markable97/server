@@ -175,14 +175,14 @@ class ThreadClient implements Runnable {
                                 if(imageBig.exists()){
                                     System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
                                     String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
-                                    byte[] byteArray = new byte[(int)image.length()];
+                                    /*byte[] byteArray = new byte[(int)image.length()];
                                     BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
                                     stream.read(byteArray, 0, byteArray.length);
                                     stream.close();
-                                    System.out.println("Кол-во байтов " + byteArray.length);
+                                    System.out.println("Кол-во байтов " + byteArray.length);*/
                                     out.writeUTF(nameImage);
-                                    out.writeInt(byteArray.length);
-                                    out.write(byteArray);
+                                    /*out.writeInt(byteArray.length);
+                                    out.write(byteArray);*/
                                     byte[] byteArrayBig = new byte[(int)imageBig.length()];
                                     BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
                                     streamBig.read(byteArrayBig, 0, byteArrayBig.length);
