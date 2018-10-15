@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class DataBaseQuery {
     
     private static int queryDivision;
-    private static int queryTour;
+    private static String queryTeam;
     private static String queryOutput="";
     
     private static String user = "root";
@@ -27,25 +27,29 @@ public class DataBaseQuery {
     private static PreparedStatement prepStateTable;
     private static PreparedStatement prepStateResultsPrevMatches;
     private static PreparedStatement prepStateCalendarNextMatches;
+    private static PreparedStatement prepStatePlayerInfo;
     
     private static ResultSet resultTournamnetTable; 
     private static ResultSet resultsPrevMatches; 
     private static ResultSet calendarNextMatches;
+    private static ResultSet resultPlayerInfo;
     
     private static ArrayList<TournamentTable> tournamentArray = new ArrayList<TournamentTable>();
     private static ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();
     private static ArrayList<NextMatches> nextMatchesArray = new ArrayList<>();
+    private static ArrayList<Player> playerArray = new ArrayList<>();
     //private static String outputQuery = "";
 
    
-    public DataBaseQuery(int dataDivision, int dataTour){
+    public DataBaseQuery(int dataDivision, String dataTeam){
         queryDivision = dataDivision;
-        queryTour = dataTour;
+        queryTeam = dataTeam;
         tournamentArray.clear();
         prevMatchesArray.clear();
         nextMatchesArray.clear();
+        playerArray.clear();
             //queryOutput="";
-            connection(queryDivision, queryTour);
+            connection(queryDivision, queryTeam);
         }
     
     
@@ -60,13 +64,17 @@ public class DataBaseQuery {
    ArrayList<NextMatches> getCalendar(){
        return DataBaseQuery.nextMatchesArray;
    }
+   
+    ArrayList<Player> getPlayerArray(){
+        return DataBaseQuery.playerArray;
+    }
     String getQueryOutput(){
         return queryOutput;
     }
     
    
     
-    private static void connection(int qDiv, int qTour){
+    private static void connection(int qDiv, String qTeam){
         try {
             connect = DriverManager.getConnection(url, user, password);
             statment = connect.createStatement();
@@ -105,6 +113,16 @@ public class DataBaseQuery {
             prepStateCalendarNextMatches.setInt(1,qDiv);     
             calendarNextMatches = prepStateCalendarNextMatches.executeQuery();
             calendarResults(calendarNextMatches);
+            
+            prepStatePlayerInfo = connect.prepareStatement("SELECT id_player, team_name, name, name_amplua, birthdate, number, games, goal, assist, yellow_card, red_card, photo \n" +
+"FROM footbal_database.players p\n" +
+"join amplua a on id_amplua = p.amplua_id_amplua\n" +
+"join teams t on id_team = p.teams_id_team\n" +
+"join players_statistics ps on ps.players_id_player = p.id_player\n" +
+"where team_name like ?;");
+            prepStatePlayerInfo.setString(1, qTeam);
+            resultPlayerInfo = prepStatePlayerInfo.executeQuery();
+            playerInfo(resultPlayerInfo);
             /*while(results.next()){
                 int id = results.getInt("id_team");
                 String team_name = results.getString("team_name");
@@ -189,6 +207,7 @@ public class DataBaseQuery {
     }
     
     private static void calendarResults(ResultSet result) {
+        
             String queryOutput = "";
             try{
                 while(result.next()){
@@ -207,4 +226,29 @@ public class DataBaseQuery {
                 Logger.getLogger(DataBaseQuery.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    
+    private static void playerInfo(ResultSet result){
+        String query = "";
+        try {
+            while(result.next()){
+                int idPlayer = result.getInt("id_player");
+                String playerTeam = result.getString("team_name");
+                String playerName = result.getString("name");
+                String amplua = result.getString("name_amplua");
+                String birhtday = result.getString("birthdate");
+                int number = result.getInt("number");
+                int games = result.getInt("games");
+                int goal = result.getInt("goal");
+                int assist = result.getInt("assist");
+                int yellowCard = result.getInt("yellow_card");
+                int redCard = result.getInt("red_card");
+                String playerUrlImage = result.getString("photo");
+                playerArray.add(new Player(idPlayer, playerTeam, playerName, amplua, birhtday, number, games, 
+                        goal, assist, yellowCard, redCard, playerUrlImage));
+            }
+            System.out.println("[4]Вывод запроса из класса БД \n" + playerArray.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

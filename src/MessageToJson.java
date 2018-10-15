@@ -9,19 +9,33 @@
  * @author Markable
  */
 public class MessageToJson {
+    private String messageLogic;
     private int id_division;
-    private int id_tour;
+    private String id_team;
+    
 
-    public MessageToJson(int id_division, int id_tour) {
+    public MessageToJson(String messageLogic, int id_division, String id_team) {
+        this.messageLogic = messageLogic;
         this.id_division = id_division;
-        this.id_tour = id_tour;
+        this.id_team = id_team;
+        
     }  
+
+    public String getMessageLogic() {
+        return messageLogic;
+    }
     
     public int getId_division() {
         return id_division;
     }
 
-    public int getId_tour() {
-        return id_tour;
+    public String getId_team() {
+        return id_team;
     }
+
+    @Override
+    public String toString() {
+        return "MessageToJson{" + "messageLogic=" + messageLogic + ", id_division=" + id_division + ", id_team=" + id_team + '}';
+    }
+    
 }
