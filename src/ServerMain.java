@@ -208,7 +208,19 @@ class ThreadClient implements Runnable {
                         out.writeUTF(playersToJson);
                         System.out.println("Открываю потоки для загрузок фоток игроков ");
                         String pathPlayer = "D:\\Учеба\\Диплом\\Фотки игроков\\";
-                        out.writeInt(playersArray.size());//кол-во фоток
+                        int countImage = 0;
+                        for(int i = 0; i < playersArray.size(); i++){
+                            File image = new File(pathPlayer + playersArray.get(i).getPlayerTeam() + "\\" +
+                                    playersArray.get(i).getPlayerUrlImage());
+                            System.out.println(image.getPath());
+                            if(image.exists()){
+                                System.out.println("Файл существует " + image.getName());
+                                countImage++;
+                            }else{
+                                System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        }
+                        out.writeInt(countImage);//кол-во фоток
                         for(int i = 0; i < playersArray.size(); i++){
                             File image = new File(pathPlayer + playersArray.get(i).getPlayerTeam() + "\\" +
                                     playersArray.get(i).getPlayerUrlImage());
