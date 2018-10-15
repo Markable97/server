@@ -167,7 +167,7 @@ class ThreadClient implements Runnable {
                         System.out.println("Добавляю потоки для файлов");
                         String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                         String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
-                        out.writeInt(tournamentArray.size());
+                        out.writeInt(tournamentArray.size());//кол-во фоток
                         for(int i = 0; i < tournamentArray.size(); i++){
                             File image = new File(path + tournamentArray.get(i).getUrlImage());
                             File imageBig = new File(pathBig + tournamentArray.get(i).getUrlImage());
@@ -206,6 +206,25 @@ class ThreadClient implements Runnable {
                         System.out.println("[4]Array of object from DB to JSON");
                         System.out.println(playersToJson);
                         out.writeUTF(playersToJson);
+                        System.out.println("Открываю потоки для загрузок фоток игроков ");
+                        String pathPlayer = "D:\\Учеба\\Диплом\\Фотки игроков\\";
+                        out.writeInt(playersArray.size());//кол-во фоток
+                        for(int i = 0; i < playersArray.size(); i++){
+                            File image = new File(pathPlayer + playersArray.get(i).getPlayerTeam() + "\\" +
+                                    playersArray.get(i).getPlayerUrlImage());
+                            System.out.println(image.getPath());
+                            if(image.exists()){
+                                System.out.println("Файл существует " + image.getName());
+                                byte[] byteImagePlayer = new byte[(int)image.length()];
+                                BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
+                                stream.read(byteImagePlayer, 0, byteImagePlayer.length);
+                                stream.close();
+                                out.writeInt(byteImagePlayer.length);
+                                out.write(byteImagePlayer);
+                            }else{
+                                System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        }
                         break;
                     case "player":
                         break;
