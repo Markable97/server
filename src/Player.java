@@ -13,7 +13,6 @@ public class Player {
     private int idPlayer;
     private String playerTeam;
     private String playerName;
-    transient String playerUrlImage;
     String birhtday;
     String amplua;
     private int number;
@@ -22,6 +21,7 @@ public class Player {
     private int assist;
     private int yellowCard;
     private int redCard;
+    transient String playerUrlImage;
 
     public Player(int idPlayer,String playerTeam, String playerName, String amplua, String birhtday, int number, 
             int games, int goal, int assist, int yellowCard, int redCard,String playerUrlImage) {
@@ -39,6 +39,15 @@ public class Player {
         this.redCard = redCard;
     }
 
+    @Override
+    public String toString() {
+        return "Player{" + "idPlayer=" + idPlayer + ", playerTeam=" + playerTeam + ", playerName=" + 
+                playerName + ", birhtday=" + birhtday + ", amplua=" + amplua + ", number=" + number + 
+                ", games=" + games + ", goal=" + goal + ", assist=" + assist + ", yellowCard=" + 
+                yellowCard + ", redCard=" + redCard + ", playerUrlImage=" + playerUrlImage + "}\n";
+    }
+
+    
     public int getIdPlayer() {
         return idPlayer;
     }
