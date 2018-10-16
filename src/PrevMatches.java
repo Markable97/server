@@ -10,12 +10,12 @@
  */
 public class PrevMatches {
     
-    private String nameDivision;
-    private int idTour;
-    private String teamHome;
-    private int goalHome;
-    private int goalVisit;
-    private String teamVisit;
+     String nameDivision;
+     int idTour;
+     String teamHome;
+     int goalHome;
+     int goalVisit;
+     String teamVisit;
 
     public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit) {
         this.nameDivision = nameDivision;
@@ -26,8 +26,13 @@ public class PrevMatches {
         this.teamVisit = teamVisit;
     }
 
-    
-    
+    @Override
+    public String toString() {
+        return "PrevMatches{" + "nameDivision=" + nameDivision + ", idTour=" + idTour + ", teamHome=" + teamHome + 
+                ", goalHome=" + goalHome + ", goalVisit=" + goalVisit + ", teamVisit=" + teamVisit + "}\n";
+    }
+
+
     public String getNameDivision() {
         return nameDivision;
     }
