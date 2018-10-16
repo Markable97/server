@@ -254,24 +254,37 @@ class ThreadClient implements Runnable {
                         System.out.println(prevAllMatchesForTeamToJson);
                         out.writeUTF(prevAllMatchesForTeamToJson);
                         System.out.println("Поток для фоток");
-                        int countIm = 1;
                         String teamPath = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\";
+                        ArrayList<String> listImage = new ArrayList<>();
+                        File imageStart = new File(teamPath + id_team + ".png");
+                        if(imageStart.exists()){
+                            System.out.println("ImageStart = " + imageStart.getName() );
+                            listImage.add(imageStart.getName());
+                        }else{
+                            System.out.println("Image not found");
+                        }
                         for(int i = 0; i< allMatchesArray.size(); i++){
                             File imH = new File(teamPath + allMatchesArray.get(i).getUrlImageHome());
+                            //System.out.println("Название файла = " + imH.getName() );
                             File imG = new File(teamPath + allMatchesArray.get(i).getUrlImageGuest());
+                            //System.out.println("Название файла = " + imG.getName());
                             if(imH.exists()&& imG.exists()){
-                                if( !(imH.getName().equals(id_team)) ){
-                                    countIm++;
+                                if( imH.getName().equals(imageStart.getName()) == false ){
+                                    System.out.println(imH.getName());
+                                    listImage.add(imH.getName());
                                 }
-                                if( !(imG.getName().equals(id_team)) ){
-                                    countIm++;
+                                if( imG.getName().equals(imageStart.getName()) == false ){
+                                    System.out.println(imG.getName());
+                                    listImage.add(imG.getName());
                                 }
                             }
                             else{
                                 System.out.println("Файлы не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
                         }
-                        System.out.println("Кол-во файлов = " + countIm);
+                        System.out.println("Кол-во файлов = " + listImage.size() + listImage);
+                        //out.write(listImage.size());
+                        
                         break;
                 }//case 
             }//while 
