@@ -51,6 +51,7 @@ public class DataBaseQuery {
         prevMatchesArray.clear();
         nextMatchesArray.clear();
         playerArray.clear();
+        allMatchesTeamArray.clear();
             //queryOutput="";
             connection(queryDivision, queryTeam);
         }
