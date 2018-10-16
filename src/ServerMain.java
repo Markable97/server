@@ -240,6 +240,8 @@ class ThreadClient implements Runnable {
                         break;
                     case "player":
                         break;
+                    case "matches":
+                        break;
                 }//case 
             }//while 
            
