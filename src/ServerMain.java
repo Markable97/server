@@ -88,6 +88,7 @@ class ThreadClient implements Runnable {
     ArrayList<PrevMatches> prevMatchesArray;//список прошедшего тура в виде массива
     ArrayList<NextMatches> nextMatchesArray;//список на следующие игры
     ArrayList<Player> playersArray;//список игроков одной команды
+    ArrayList<PrevAllMatchesForTeam> allMatchesArray;//список всех матчей
     
     DataInputStream in;
     DataOutputStream out;
@@ -102,6 +103,10 @@ class ThreadClient implements Runnable {
         System.out.println(client.getInetAddress() + " connection number = " + numberUser);
         in = new DataInputStream(fromclient.getInputStream());
         out = new DataOutputStream(fromclient.getOutputStream());
+        /*tournamentArray.clear();
+        prevMatchesArray.clear();
+        nextMatchesArray.clear();
+        playersArray.clear();*/
         //outTournamentTable = new DataOutputStream(fromclient.getOutputStream());
     }
     
@@ -241,6 +246,32 @@ class ThreadClient implements Runnable {
                     case "player":
                         break;
                     case "matches":
+                        System.out.println("Case matches for team");
+                        DataBaseQuery baseQueryAllMatches = new DataBaseQuery(id_division, id_team);
+                        allMatchesArray = baseQueryAllMatches.getAllMatches();
+                        String prevAllMatchesForTeamToJson = gson.toJson(allMatchesArray);
+                        System.out.println("[5]Array of object from DB to JSON");
+                        System.out.println(prevAllMatchesForTeamToJson);
+                        out.writeUTF(prevAllMatchesForTeamToJson);
+                        System.out.println("Поток для фоток");
+                        int countIm = 1;
+                        String teamPath = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\";
+                        for(int i = 0; i< allMatchesArray.size(); i++){
+                            File imH = new File(teamPath + allMatchesArray.get(i).getUrlImageHome());
+                            File imG = new File(teamPath + allMatchesArray.get(i).getUrlImageGuest());
+                            if(imH.exists()&& imG.exists()){
+                                if( !(imH.getName().equals(id_team)) ){
+                                    countIm++;
+                                }
+                                if( !(imG.getName().equals(id_team)) ){
+                                    countIm++;
+                                }
+                            }
+                            else{
+                                System.out.println("Файлы не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        }
+                        System.out.println("Кол-во файлов = " + countIm);
                         break;
                 }//case 
             }//while 
