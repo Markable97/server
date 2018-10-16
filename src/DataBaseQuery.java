@@ -273,7 +273,6 @@ public class DataBaseQuery {
     }
     
     private static void allMatchesForTeam(ResultSet result){
-        prevMatchesArray.clear();
         try {
             while(result.next()){
                 String nameDivision = result.getString("name_division");
