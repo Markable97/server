@@ -137,7 +137,7 @@ public class DataBaseQuery {
                     "join teams h on teams_id_teamHome = h.id_team \n" +
                     "join teams g on teams_id_teamVisitor = g.id_team\n" +
                     "join divisions d on m.divisions_id_division = id_division\n" +
-                    "where h.team_name like ? or g.team_name like ?\n" +
+                    "where h.team_name like ? or g.team_name like ? and date <= curdate()\n" +
                     "order by id_tour desc;");
             prepStateAllMatchesTeam.setString(1, qTeam);
             prepStateAllMatchesTeam.setString(2, qTeam);
