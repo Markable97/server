@@ -10,12 +10,14 @@
  */
 public class PrevMatches {
     
-    private String nameDivision;
-    private int idTour;
-    private String teamHome;
-    private int goalHome;
-    private int goalVisit;
-    private String teamVisit;
+     String nameDivision;
+     int idTour;
+     String teamHome;
+     int goalHome;
+     int goalVisit;
+     String teamVisit;
+     transient String urlImageHome;
+     transient String urlImageGuest;
 
     public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit) {
         this.nameDivision = nameDivision;
@@ -26,8 +28,24 @@ public class PrevMatches {
         this.teamVisit = teamVisit;
     }
 
-    
-    
+    public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit, String urlImageH, String urlImageG) {
+        this.nameDivision = nameDivision;
+        this.idTour = idTour;
+        this.teamHome = teamHome;
+        this.goalHome = goalHome;
+        this.goalVisit = goalVisit;
+        this.teamVisit = teamVisit;
+        this.urlImageHome = urlImageH;
+        this.urlImageGuest = urlImageG;
+    }
+
+    @Override
+    public String toString() {
+        return "PrevMatches{" + "nameDivision=" + nameDivision + ", idTour=" + idTour + ", teamHome=" + teamHome + 
+                ", goalHome=" + goalHome + ", goalVisit=" + goalVisit + ", teamVisit=" + teamVisit + "}\n";
+    }
+
+
     public String getNameDivision() {
         return nameDivision;
     }
@@ -51,6 +69,12 @@ public class PrevMatches {
     public String getTeamVisit() {
         return teamVisit;
     }
-    
-    
+
+    String getUrlImageHome() {
+      return urlImageHome;
+    }
+
+    String getUrlImageGuest() {
+        return urlImageGuest;
+    }
 }
