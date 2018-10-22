@@ -16,6 +16,8 @@ public class PrevMatches {
      int goalHome;
      int goalVisit;
      String teamVisit;
+     transient String urlImageHome;
+     transient String urlImageGuest;
 
     public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit) {
         this.nameDivision = nameDivision;
@@ -24,6 +26,17 @@ public class PrevMatches {
         this.goalHome = goalHome;
         this.goalVisit = goalVisit;
         this.teamVisit = teamVisit;
+    }
+
+    public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit, String urlImageH, String urlImageG) {
+        this.nameDivision = nameDivision;
+        this.idTour = idTour;
+        this.teamHome = teamHome;
+        this.goalHome = goalHome;
+        this.goalVisit = goalVisit;
+        this.teamVisit = teamVisit;
+        this.urlImageHome = urlImageH;
+        this.urlImageGuest = urlImageG;
     }
 
     @Override
@@ -56,6 +69,12 @@ public class PrevMatches {
     public String getTeamVisit() {
         return teamVisit;
     }
-    
-    
+
+    String getUrlImageHome() {
+      return urlImageHome;
+    }
+
+    String getUrlImageGuest() {
+        return urlImageGuest;
+    }
 }

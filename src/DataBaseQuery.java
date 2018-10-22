@@ -40,7 +40,7 @@ public class DataBaseQuery {
     private static ArrayList<PrevMatches> prevMatchesArray = new ArrayList<>();
     private static ArrayList<NextMatches> nextMatchesArray = new ArrayList<>();
     private static ArrayList<Player> playerArray = new ArrayList<>();
-    private static ArrayList<PrevAllMatchesForTeam> allMatchesTeamArray = new ArrayList<>();
+    private static ArrayList<PrevMatches> allMatchesTeamArray = new ArrayList<>();
     //private static String outputQuery = "";
 
    
@@ -72,7 +72,7 @@ public class DataBaseQuery {
     ArrayList<Player> getPlayerArray(){
         return DataBaseQuery.playerArray;
     }
-    ArrayList<PrevAllMatchesForTeam> getAllMatches(){
+    ArrayList<PrevMatches> getAllMatches(){
         return DataBaseQuery.allMatchesTeamArray;
     }
     String getQueryOutput(){
@@ -283,7 +283,7 @@ public class DataBaseQuery {
                 String teamVisit = result.getString("g.team_name");
                 String urlImageH = result.getString("h.logo");
                 String urlImageG = result.getString("g.logo");
-                allMatchesTeamArray.add(new PrevAllMatchesForTeam(nameDivision, idTour, teamHome, goalHome, goalVisit, teamVisit, urlImageH, urlImageG) );
+                allMatchesTeamArray.add(new PrevMatches(nameDivision, idTour, teamHome, goalHome, goalVisit, teamVisit, urlImageH, urlImageG) );
             }
             System.out.println("[5]Вывод запроса из класса БД \n" + allMatchesTeamArray.toString());
         } catch (SQLException ex) {

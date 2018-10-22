@@ -88,7 +88,7 @@ class ThreadClient implements Runnable {
     ArrayList<PrevMatches> prevMatchesArray;//список прошедшего тура в виде массива
     ArrayList<NextMatches> nextMatchesArray;//список на следующие игры
     ArrayList<Player> playersArray;//список игроков одной команды
-    ArrayList<PrevAllMatchesForTeam> allMatchesArray;//список всех матчей
+    ArrayList<PrevMatches> allMatchesArray;//список всех матчей
     
     DataInputStream in;
     DataOutputStream out;
