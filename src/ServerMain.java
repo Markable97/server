@@ -283,6 +283,26 @@ class ThreadClient implements Runnable {
                             }
                         }
                         System.out.println("Кол-во файлов = " + listImage.size() + listImage);
+                        out.writeInt(listImage.size());
+                        if(listImage.size()!=0){
+                            for(int i = 0; i < listImage.size(); i++){
+                                File file = new File(teamPath+listImage.get(i));
+                                if(file.exists()){
+                                    System.out.println("Файл существует " + file.getName());
+                                    String nameImage = listImage.get(i).replace(".png","");
+                                    out.writeUTF(nameImage);
+                                    byte[] byteImageTeam = new byte[(int)file.length()];
+                                    BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file));
+                                    stream.read(byteImageTeam, 0, byteImageTeam.length);
+                                    stream.close();
+                                    out.writeInt(byteImageTeam.length);
+                                    out.write(byteImageTeam);
+                                }
+                            }
+                        }
+                        else{
+                            System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        }
                         //out.write(listImage.size());
                         
                         break;
