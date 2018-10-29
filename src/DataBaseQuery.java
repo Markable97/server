@@ -19,7 +19,7 @@ public class DataBaseQuery {
     
     private static String user = "root";
     private static String password = "7913194";
-    private static String url = "jdbc:mysql://localhost:3306/footbal_database";
+    private static String url = "jdbc:mysql://localhost:3306/main_football";
     
     private static Connection connect;
     private static Statement statment;
@@ -87,7 +87,7 @@ public class DataBaseQuery {
             statment = connect.createStatement();
             //results = statment.executeQuery(query);
             prepStateTable = connect.prepareStatement("SELECT  name_division, team_name, games,point,wins,draws,losses,goals_scored,goals_conceded,logo\n" +
-                    "FROM footbal_database.tournament_table j\n" +
+                    "FROM tournament_table j\n" +
                     "join divisions d on id_division = j.divisions_id_division\n" +
                     "join teams t on id_team = teams_id_team\n" +
                     "where j.divisions_id_division = ?\n" +
@@ -98,7 +98,7 @@ public class DataBaseQuery {
             tournamentTableByDivision(resultTournamnetTable);//
             
             prepStateResultsPrevMatches = connect.prepareStatement("SELECT name_division,id_tour,h.team_name,goal_home,goal_visitor, g.team_name, date\n" +
-                    "FROM footbal_database.matches m\n" +
+                    "FROM matches m\n" +
                     "join teams h on teams_id_teamHome = h.id_team\n" +
                     "join teams g on teams_id_teamVisitor = g.id_team\n" +
                     "join divisions d on m.divisions_id_division = id_division\n" +
@@ -110,7 +110,7 @@ public class DataBaseQuery {
             
             prepStateCalendarNextMatches = connect.prepareStatement("SELECT  name_division, id_tour,h.team_name, g.team_name, DATE_FORMAT((date), \n" +
                     "CONCAT(' %d, ', ELT( MONTH((date)), 'ßíâ.','Ôåâ.','Ìàð.','Àïð.','Ìàé.','Èþí.','Èþë.','Àâã.','Ñåí.','Îêò.','Íîÿ.','Äåê.'),' %H:%i')), name_stadium\n" +
-                    "FROM footbal_database.matches m\n" +
+                    "FROM matches m\n" +
                     "join teams h on teams_id_teamHome = h.id_team\n" +
                     "join teams g on teams_id_teamVisitor = g.id_team\n" +
                     "join stadiums s on stadiums_id_stadium = s.id_stadium\n" +
@@ -122,7 +122,7 @@ public class DataBaseQuery {
             calendarResults(calendarNextMatches);
             
             prepStatePlayerInfo = connect.prepareStatement("SELECT id_player, team_name, name, name_amplua, birthdate, number, games, goal, assist, yellow_card, red_card, photo \n" +
-                    "FROM footbal_database.players p\n" +
+                    "FROM players p\n" +
                     "join amplua a on id_amplua = p.amplua_id_amplua\n" +
                     "join teams t on id_team = p.teams_id_team\n" +
                     "join players_statistics ps on ps.players_id_player = p.id_player\n" +
@@ -133,11 +133,11 @@ public class DataBaseQuery {
             
             prepStateAllMatchesTeam = connect.prepareStatement("SELECT name_division,id_tour,h.team_name,goal_home,"
                     + "goal_visitor, g.team_name, h.logo, g.logo\n" +
-                    "FROM footbal_database.matches m \n" +
+                    "FROM matches m \n" +
                     "join teams h on teams_id_teamHome = h.id_team \n" +
                     "join teams g on teams_id_teamVisitor = g.id_team\n" +
                     "join divisions d on m.divisions_id_division = id_division\n" +
-                    "where h.team_name like ? or g.team_name like ? and date <= curdate()\n" +
+                    "where (h.team_name like ? or g.team_name like ?) and m.goal_home is not null\n" +
                     "order by id_tour desc;");
             prepStateAllMatchesTeam.setString(1, qTeam);
             prepStateAllMatchesTeam.setString(2, qTeam);
