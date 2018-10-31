@@ -126,7 +126,7 @@ public class DataBaseQuery {
                     "join amplua a on id_amplua = p.amplua_id_amplua\n" +
                     "join teams t on id_team = p.teams_id_team\n" +
                     "join players_statistics ps on ps.players_id_player = p.id_player\n" +
-                    "where team_name like ?;");
+                    "where team_name like ? order by name_amplua;");
             prepStatePlayerInfo.setString(1, qTeam);
             resultPlayerInfo = prepStatePlayerInfo.executeQuery();
             playerInfo(resultPlayerInfo);
