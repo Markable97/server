@@ -16,14 +16,30 @@ public class TournamentTable implements Serializable {
     private String divisionName;
     private String teamName;
     private int games;
-    private int point;
+    private int points;
     private int wins;
     private int draws;
     private int losses;
     private int goalScored;
     private int goalConceded;
+    private int sc_con;
     private transient String urlImage;
    
+    public TournamentTable(String division, String team, int games,int wins, int draws, int losses,
+            int goalScored, int goalConceded, int sc_con, int points, String urlImage){
+        this.divisionName = division;
+        this.teamName = team;
+        this.games = games;
+        this.wins = wins;
+        this.draws = draws;
+        this.losses = losses;
+        this.goalScored = goalConceded;
+        this.goalConceded = goalConceded;
+        this.sc_con = sc_con;
+        this.points = points;
+        this.urlImage = urlImage;
+    }
+    
     public TournamentTable(String division, String team, int games, int point, int wins, int draws, int losses,
             int goalScored, int goalConceded,String urlImage){
         setDivision(division);
@@ -51,7 +67,7 @@ public class TournamentTable implements Serializable {
         this.games = games;
     }
     private void setPoint(int point) {
-        this.point = point;
+        this.points = point;
     }
     private void setWins(int wins) {
         this.wins = wins;
@@ -86,7 +102,7 @@ public class TournamentTable implements Serializable {
     }
 
     public int getPoint() {
-        return point;
+        return points;
     }
 
     public int getWins() {

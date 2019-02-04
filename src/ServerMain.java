@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -133,7 +134,8 @@ class ThreadClient implements Runnable {
                         fromclient.close();
                         break exit;
                     case "division":
-                        DataBaseQuery baseQuery = new DataBaseQuery(id_division, id_team);//объект класса с соедиением и запросом к бд
+                        DataBaseRequest baseRequest = new DataBaseRequest(id_division);
+                        //DataBaseQuery baseQuery = new DataBaseQuery(id_division, id_team);//объект класса с соедиением и запросом к бд
                          //out.writeUTF(input.toUpperCase()); //переда клиенту в большом регистре
                 
                         // teamsArray = baseQuery.getTeamListDivision();//массиву присваевается массив объектов из запроса к бд
@@ -149,10 +151,12 @@ class ThreadClient implements Runnable {
                          //out.writeUTF(baseQuery.getQueryOutput());//передача выполненного запроса(строкая переменная)
                          //outListTeams.writeUTF(teamsArrayToJson);
                 
-                        tournamentArray = baseQuery.getTournamentTable();
+                        //tournamentArray = baseQuery.getTournamentTable();
+                        tournamentArray = baseRequest.getTournamentTable();
                         String tournamentTableToJson = gson.toJson(tournamentArray);
                 
-                        prevMatchesArray = baseQuery.getResultsPrevMatches();
+                        //prevMatchesArray = baseQuery.getResultsPrevMatches();
+                        prevMatchesArray = baseRequest.getPrevMatches();
                         String prevMatchesToJson = gson.toJson(prevMatchesArray);
                 
                         nextMatchesArray = baseQuery.getCalendar();
@@ -317,6 +321,8 @@ class ThreadClient implements Runnable {
             fromclient.close();
         } catch (IOException ex) {
             
+        } catch (SQLException ex) {
+            Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
