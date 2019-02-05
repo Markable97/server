@@ -22,8 +22,8 @@ public class DataBaseRequest {
 "       wins,\n" +
 "       draws, \n" +
 "       losses, \n" +
-"       goal_scored, \n" +
-"       goal_conceded, \n" +
+"       goals_scored, \n" +
+"       goals_conceded, \n" +
 "       sc_con, \n" +
 "       points, \n" +
 "       logo \n" +
@@ -50,7 +50,7 @@ public class DataBaseRequest {
 "       team_guest, \n" +
 "       date_format(m_date,'%d-%m-%y %H:%i') as m_date, \n" +
 "       name_stadium, \n" +
-"       staff_name,\n" +
+"       staff_name\n" +
 "FROM football_main.v_matches m\n" +
 "where curdate() < m_date and id_division = ?;";
     //------------------------------------------
@@ -88,7 +88,7 @@ public class DataBaseRequest {
             //Вытаскиваем будущие матчи
             getPrevMatches(rsPrevMatches);
             prNextMatches = connect.prepareCall(sqlNextMatches);
-            prPrevMatches.setInt(1, id_div);
+            prNextMatches.setInt(1, id_div);
             rsNextMathces = prNextMatches.executeQuery();
             getNextMatches(rsNextMathces);
         } catch (SQLException ex) {
