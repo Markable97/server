@@ -30,7 +30,7 @@ public class DataBaseRequest {
 "FROM football_main.v_tournament_table\n" +
 "where id_division = ?;";
     private static String sqlPrevMatches = "SELECT name_division, \n" +
-"	   id_division, \n" +
+"	id_division, \n" +
 "       id_tour, \n" +
 "       team_home, \n" +
 "       goal_home, \n" +
@@ -44,18 +44,30 @@ public class DataBaseRequest {
 "FROM football_main.v_matches \n" +
 "where (to_days(curdate()) - to_days(m_date) ) >= 0 and (to_days(curdate()) - to_days(m_date)) < 8\n" +
 "and id_division = ?;";
+    private static String sqlNextMatches = "SELECT name_division, \n" +
+"       id_tour, \n" +
+"       team_home, \n" +
+"       team_guest, \n" +
+"       date_format(m_date,'%d-%m-%y %H:%i') as m_date, \n" +
+"       name_stadium, \n" +
+"       staff_name,\n" +
+"FROM football_main.v_matches m\n" +
+"where curdate() < m_date and id_division = ?;";
     //------------------------------------------
     //------Переменные для коннекта-------------
     private static PreparedStatement prTournamentTable;
     private static PreparedStatement prPrevMatches;
+    private static PreparedStatement prNextMatches;
     //------------------------------------------
     //------Переменные для вытаскивание результатат
     private static ResultSet rsTournamnetTable;
     private static ResultSet rsPrevMatches;
+    private static ResultSet rsNextMathces;
     //------------------------------------------
     //-----Переменные для массивов объектов-----
     private static ArrayList<TournamentTable> tournamentTable = new ArrayList<TournamentTable>();
     private static ArrayList<PrevMatches> prevMatches = new ArrayList<>();
+    private static ArrayList<NextMatches> nextMatches = new ArrayList<>();
     //------------------------------------------
     public DataBaseRequest(int id_div) throws SQLException{
         connection(id_div);
@@ -73,7 +85,12 @@ public class DataBaseRequest {
             prPrevMatches = connect.prepareCall(sqlPrevMatches);
             prPrevMatches.setInt(1, id_div);
             rsPrevMatches = prPrevMatches.executeQuery();
+            //Вытаскиваем будущие матчи
             getPrevMatches(rsPrevMatches);
+            prNextMatches = connect.prepareCall(sqlNextMatches);
+            prPrevMatches.setInt(1, id_div);
+            rsNextMathces = prNextMatches.executeQuery();
+            getNextMatches(rsNextMathces);
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -133,6 +150,27 @@ public class DataBaseRequest {
             Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private static void getNextMatches(ResultSet result){
+        String queryOutput = "";
+        try {
+            while(result.next()){
+                String nameDivision = result.getString("name_division");
+                int tour = result.getInt("id_tour");
+                String t_home = result.getString("team_home");
+                String t_guest = result.getString("team_guest");
+                String m_date = result.getString("m_date");
+                String stadium = result.getString("name_stadium");
+                queryOutput += nameDivision + " " + tour + " " +t_home +  " " + t_guest + " " 
+                            + m_date + " " + stadium + "\n";
+                nextMatches.add(new NextMatches(nameDivision, tour, t_home, t_guest, m_date, stadium));
+            }
+            System.out.println("DataBaseRequest getNextMatchrs():output query  from DB:" + queryOutput);
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public static ArrayList<TournamentTable> getTournamentTable() {
         return DataBaseRequest.tournamentTable;
     }
@@ -140,5 +178,11 @@ public class DataBaseRequest {
    public static ArrayList<PrevMatches> getPrevMatches(){
        return DataBaseRequest.prevMatches;
    }
+
+    public static ArrayList<NextMatches> getNextMatches() {
+        return DataBaseRequest.nextMatches;
+    }
+   
+   
     
 }

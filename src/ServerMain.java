@@ -159,7 +159,8 @@ class ThreadClient implements Runnable {
                         prevMatchesArray = baseRequest.getPrevMatches();
                         String prevMatchesToJson = gson.toJson(prevMatchesArray);
                 
-                        nextMatchesArray = baseQuery.getCalendar();
+                        //nextMatchesArray = baseQuery.getCalendar();
+                        nextMatchesArray = baseRequest.getNextMatches();
                         String nextMatchesToJson = gson.toJson(nextMatchesArray);
                 
                         System.out.println("[1]Array of object from DB to JSON");
