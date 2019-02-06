@@ -18,14 +18,15 @@ public class Player {
     private int number;
     private int games;
     private int goal;
+    private int penalty;
     private int assist;
     private int yellowCard;
     private int redCard;
     transient String playerUrlImage;
 
-    public Player(int idPlayer,String playerTeam, String playerName, String amplua, String birhtday, int number, 
-            int games, int goal, int assist, int yellowCard, int redCard,String playerUrlImage) {
-        this.idPlayer = idPlayer;
+    public Player(String playerTeam, String playerName, String amplua, String birhtday, int number, 
+            int games, int goal, int penalty, int assist, int yellowCard, int redCard,String playerUrlImage) {
+        //this.idPlayer = idPlayer;
         this.playerTeam = playerTeam;
         this.playerName = playerName;
         this.playerUrlImage = playerUrlImage;
@@ -34,6 +35,7 @@ public class Player {
         this.number = number;
         this.games = games;
         this.goal = goal;
+        this.penalty = penalty;
         this.assist = assist;
         this.yellowCard = yellowCard;
         this.redCard = redCard;
@@ -97,5 +99,8 @@ public class Player {
     public int getRedCard() {
         return redCard;
     }
-    
+
+    public int getPenalty() {
+        return penalty;
+    }
 }

@@ -210,8 +210,10 @@ class ThreadClient implements Runnable {
                         break;
                     case "team":
                         System.out.println("Case team");
-                        DataBaseQuery baseQuery1 = new DataBaseQuery(id_division, id_team);
-                        playersArray = baseQuery1.getPlayerArray();
+                        //DataBaseQuery baseQuery1 = new DataBaseQuery(id_division, id_team);
+                        //playersArray = baseQuery1.getPlayerArray();
+                        DataBaseRequest baseRequest1 = new DataBaseRequest(id_team);
+                        playersArray = baseRequest1.getSquadInfo();
                         String playersToJson = gson.toJson(playersArray);
                         System.out.println("[4]Array of object from DB to JSON");
                         System.out.println(playersToJson);

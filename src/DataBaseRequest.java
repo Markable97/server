@@ -53,24 +53,49 @@ public class DataBaseRequest {
 "       staff_name\n" +
 "FROM football_main.v_matches m\n" +
 "where curdate() < m_date and id_division = ?;";
+    private static String sqlSquadInfo = "select team_name, \n" +
+"	name, \n" +
+"       name_amplua,\n" +
+"       date_format(birthdate, '%d-%m-%Y') as birthdate,\n" +
+"       number,\n" +
+"       games,\n" +
+"       goal,\n" +
+"       penalty,\n" +
+"       assist,\n" +
+"       yellow_card,\n" +
+"       red_card,\n" +
+"       photo\n" +
+"from v_squad\n" +
+"where id_team = ?;";
     //------------------------------------------
     //------Переменные для коннекта-------------
     private static PreparedStatement prTournamentTable;
     private static PreparedStatement prPrevMatches;
     private static PreparedStatement prNextMatches;
+    private static PreparedStatement prSquadInfo;
     //------------------------------------------
     //------Переменные для вытаскивание результатат
     private static ResultSet rsTournamnetTable;
     private static ResultSet rsPrevMatches;
     private static ResultSet rsNextMathces;
+    private static ResultSet rsSquadInfo;
     //------------------------------------------
     //-----Переменные для массивов объектов-----
     private static ArrayList<TournamentTable> tournamentTable = new ArrayList<TournamentTable>();
     private static ArrayList<PrevMatches> prevMatches = new ArrayList<>();
     private static ArrayList<NextMatches> nextMatches = new ArrayList<>();
+    private static ArrayList<Player> squadInfo = new ArrayList<>();
     //------------------------------------------
-    public DataBaseRequest(int id_div) throws SQLException{
-        connection(id_div);
+    public DataBaseRequest(int id) throws SQLException{
+        tournamentTable.clear();
+        prevMatches.clear();
+        nextMatches.clear();
+        connection(id);
+    }
+    
+    public DataBaseRequest(String name_team)throws SQLException{
+        squadInfo.clear();
+        connection(name_team);
     }
     
     private static void connection(int id_div) throws SQLException{
@@ -97,6 +122,18 @@ public class DataBaseRequest {
             connect.close();
             rsTournamnetTable.close();
             rsPrevMatches.close();
+        }
+    }
+    
+    private static void connection(String name_team){
+        try {
+            connect = DriverManager.getConnection(url, user, password);
+            prSquadInfo = connect.prepareCall(sqlSquadInfo);
+            prSquadInfo.setString(1, name_team);
+            rsSquadInfo = prSquadInfo.executeQuery();
+            getSquadInfo(rsSquadInfo);
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -171,6 +208,32 @@ public class DataBaseRequest {
         }
     }
     
+    private static void getSquadInfo(ResultSet result){
+        String queryOutput = "";
+        try {
+            while(result.next()){
+                String team_name = result.getString("team_name");
+                String name = result.getString("name");
+                String amplua = result.getString("name_amplua");
+                String birthdate = result.getString("birthdate");
+                int number = result.getInt("number");
+                int games = result.getInt("gemes");
+                int goal = result.getInt("goal");
+                int penalty = result.getInt("penalty");
+                int assist = result.getInt("assist");
+                int yellow = result.getInt("yellow_card");
+                int red = result.getInt("red_card");
+                String photo = result.getString("photo");
+                queryOutput+=team_name + " " + name + " " + amplua + " " + birthdate + " " + number + " " +
+                        games + " " + goal + " " + penalty + " " + assist + " " +yellow+ " " + red + " " + photo + "\n";
+                squadInfo.add(new Player(team_name,name,amplua,birthdate,number, games, goal, penalty, assist, yellow, red, photo) );
+            }
+            System.out.println("DataBaseRequest getSquadInfo():output query  from DB:" + queryOutput);
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public static ArrayList<TournamentTable> getTournamentTable() {
         return DataBaseRequest.tournamentTable;
     }
@@ -182,7 +245,10 @@ public class DataBaseRequest {
     public static ArrayList<NextMatches> getNextMatches() {
         return DataBaseRequest.nextMatches;
     }
-   
+
+    public static ArrayList<Player> getSquadInfo() {
+        return squadInfo;
+    }
    
     
 }
