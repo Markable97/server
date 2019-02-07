@@ -89,7 +89,8 @@ class ThreadClient implements Runnable {
     ArrayList<PrevMatches> prevMatchesArray;//список прошедшего тура в виде массива
     ArrayList<NextMatches> nextMatchesArray;//список на следующие игры
     ArrayList<Player> playersArray;//список игроков одной команды
-    ArrayList<PrevMatches> allMatchesArray;//список всех матчей
+    //ArrayList<PrevMatches> prevAllMatches;//Список всех матчей одной команды
+    //ArrayList<PrevMatches> allMatchesArray;//список всех матчей
     
     DataInputStream in;
     DataOutputStream out;
@@ -119,7 +120,6 @@ class ThreadClient implements Runnable {
             while(fromclient.isConnected()){
                 System.out.println("Wait message..."); 
                 input = in.readUTF();
-               
                 //System.out.println("new branch locig server");
                
                 System.out.println("String received from the client = " + input);
@@ -174,7 +174,7 @@ class ThreadClient implements Runnable {
                         out.writeUTF(prevMatchesToJson);
                         out.writeUTF(nextMatchesToJson);
                         //начало ветки
-                        System.out.println("Добавляю потоки для файлов");
+                        /*System.out.println("Добавляю потоки для файлов");
                         String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                         String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
                         out.writeInt(tournamentArray.size());//кол-во фоток
@@ -185,14 +185,7 @@ class ThreadClient implements Runnable {
                                 if(imageBig.exists()){
                                     System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
                                     String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
-                                    /*byte[] byteArray = new byte[(int)image.length()];
-                                    BufferedInputStream stream = new BufferedInputStream(new FileInputStream(image));
-                                    stream.read(byteArray, 0, byteArray.length);
-                                    stream.close();
-                                    System.out.println("Кол-во байтов " + byteArray.length);*/
                                     out.writeUTF(nameImage);
-                                    /*out.writeInt(byteArray.length);
-                                    out.write(byteArray);*/
                                     byte[] byteArrayBig = new byte[(int)imageBig.length()];
                                     BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
                                     streamBig.read(byteArrayBig, 0, byteArrayBig.length);
@@ -206,19 +199,19 @@ class ThreadClient implements Runnable {
                             }else{
                                 System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
-                        }
+                        }*/
                         break;
                     case "team":
                         System.out.println("Case team");
                         //DataBaseQuery baseQuery1 = new DataBaseQuery(id_division, id_team);
                         //playersArray = baseQuery1.getPlayerArray();
-                        DataBaseRequest baseRequest1 = new DataBaseRequest(id_team);
+                        DataBaseRequest baseRequest1 = new DataBaseRequest(id_team,messageLogic);
                         playersArray = baseRequest1.getSquadInfo();
                         String playersToJson = gson.toJson(playersArray);
                         System.out.println("[4]Array of object from DB to JSON");
                         System.out.println(playersToJson);
                         out.writeUTF(playersToJson);
-                        System.out.println("Открываю потоки для загрузок фоток игроков ");
+                        /*System.out.println("Открываю потоки для загрузок фоток игроков ");
                         String pathPlayer = "D:\\Учеба\\Диплом\\Фотки игроков\\";
                         int countImage = 0;
                         for(int i = 0; i < playersArray.size(); i++){
@@ -248,19 +241,21 @@ class ThreadClient implements Runnable {
                             }else{
                                 System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
-                        }
+                        }*/
                         break;
                     case "player":
                         break;
                     case "matches":
                         System.out.println("Case matches for team");
-                        DataBaseQuery baseQueryAllMatches = new DataBaseQuery(id_division, id_team);
-                        allMatchesArray = baseQueryAllMatches.getAllMatches();
-                        String prevAllMatchesForTeamToJson = gson.toJson(allMatchesArray);
+                        DataBaseRequest dbr = new DataBaseRequest(id_team, messageLogic);
+                        //DataBaseQuery baseQueryAllMatches = new DataBaseQuery(id_division, id_team);
+                        //allMatchesArray = baseQueryAllMatches.getAllMatches();
+                        prevMatchesArray = dbr.getPrevMatches();
+                        String prevAllMatchesForTeamToJson = gson.toJson(prevMatchesArray);
                         System.out.println("[5]Array of object from DB to JSON");
                         System.out.println(prevAllMatchesForTeamToJson);
                         out.writeUTF(prevAllMatchesForTeamToJson);
-                        System.out.println("Поток для фоток");
+                        /*System.out.println("Поток для фоток");
                         String teamPath = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\";
                         ArrayList<String> listImage = new ArrayList<>();
                         File imageStart = new File(teamPath + id_team + ".png");
@@ -309,7 +304,7 @@ class ThreadClient implements Runnable {
                         }
                         else{
                             System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        }
+                        }*/
                         //out.write(listImage.size());
                         
                         break;
