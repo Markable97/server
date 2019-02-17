@@ -174,7 +174,7 @@ class ThreadClient implements Runnable {
                         out.writeUTF(prevMatchesToJson);
                         out.writeUTF(nextMatchesToJson);
                         //начало ветки
-                        /*System.out.println("Добавляю потоки для файлов");
+                        System.out.println("Добавляю потоки для файлов");
                         String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                         String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
                         out.writeInt(tournamentArray.size());//кол-во фоток
@@ -199,7 +199,7 @@ class ThreadClient implements Runnable {
                             }else{
                                 System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
-                        }*/
+                        }
                         break;
                     case "team":
                         System.out.println("Case team");
@@ -211,7 +211,7 @@ class ThreadClient implements Runnable {
                         System.out.println("[4]Array of object from DB to JSON");
                         System.out.println(playersToJson);
                         out.writeUTF(playersToJson);
-                        /*System.out.println("Открываю потоки для загрузок фоток игроков ");
+                        System.out.println("Открываю потоки для загрузок фоток игроков ");
                         String pathPlayer = "D:\\Учеба\\Диплом\\Фотки игроков\\";
                         int countImage = 0;
                         for(int i = 0; i < playersArray.size(); i++){
@@ -241,7 +241,7 @@ class ThreadClient implements Runnable {
                             }else{
                                 System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
-                        }*/
+                        }
                         break;
                     case "player":
                         break;
@@ -255,7 +255,7 @@ class ThreadClient implements Runnable {
                         System.out.println("[5]Array of object from DB to JSON");
                         System.out.println(prevAllMatchesForTeamToJson);
                         out.writeUTF(prevAllMatchesForTeamToJson);
-                        /*System.out.println("Поток для фоток");
+                        System.out.println("Поток для фоток");
                         String teamPath = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\";
                         ArrayList<String> listImage = new ArrayList<>();
                         File imageStart = new File(teamPath + id_team + ".png");
@@ -265,10 +265,10 @@ class ThreadClient implements Runnable {
                         }else{
                             System.out.println("Image not found");
                         }
-                        for(int i = 0; i< allMatchesArray.size(); i++){
-                            File imH = new File(teamPath + allMatchesArray.get(i).getUrlImageHome());
+                        for(int i = 0; i< prevMatchesArray.size(); i++){
+                            File imH = new File(teamPath + prevMatchesArray.get(i).getUrlImageHome());
                             //System.out.println("Название файла = " + imH.getName() );
-                            File imG = new File(teamPath + allMatchesArray.get(i).getUrlImageGuest());
+                            File imG = new File(teamPath + prevMatchesArray.get(i).getUrlImageGuest());
                             //System.out.println("Название файла = " + imG.getName());
                             if(imH.exists()&& imG.exists()){
                                 if( imH.getName().equals(imageStart.getName()) == false ){
@@ -304,7 +304,7 @@ class ThreadClient implements Runnable {
                         }
                         else{
                             System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        }*/
+                        }
                         //out.write(listImage.size());
                         
                         break;

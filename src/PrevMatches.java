@@ -10,6 +10,7 @@
  */
 public class PrevMatches {
     
+     int id_match;
      String nameDivision;
      int idTour;
      String teamHome;
@@ -28,7 +29,8 @@ public class PrevMatches {
         this.teamVisit = teamVisit;
     }
 
-    public PrevMatches(String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit, String urlImageH, String urlImageG) {
+    public PrevMatches(int id_match, String nameDivision, int idTour, String teamHome, int goalHome, int goalVisit, String teamVisit, String urlImageH, String urlImageG) {
+        this.id_match = id_match;
         this.nameDivision = nameDivision;
         this.idTour = idTour;
         this.teamHome = teamHome;

@@ -29,7 +29,7 @@ public class DataBaseRequest {
 "       logo \n" +
 "FROM football_main.v_tournament_table\n" +
 "where id_division = ?;";
-    private static String sqlPrevMatches = "SELECT name_division, \n" +
+    private static String sqlPrevMatches = "SELECT id_match, name_division, \n" +
 "	id_division, \n" +
 "       id_tour, \n" +
 "       team_home, \n" +
@@ -67,7 +67,7 @@ public class DataBaseRequest {
 "       photo\n" +
 "from v_squad\n" +
 "where team_name = ?;";
-    private static String sqlAllMatches = "SELECT name_division, \n" +
+    private static String sqlAllMatches = "SELECT id_match, name_division, \n" +
 "	id_division, \n" +
 "       id_tour, \n" +
 "       team_home, \n" +
@@ -198,7 +198,7 @@ public class DataBaseRequest {
                         + losses + " " + goals_scored + " " + goals_conceded + " "
                         + sc_con + " " + points + " " + logo + "\n";
                 tournamentTable.add(new TournamentTable(nameDivision, teamName, games, wins, draws, losses, 
-                        goals_scored, goals_conceded, sc_con, points, logo));
+                        goals_scored, goals_conceded/*, sc_con*/, points, logo));
             }
             System.out.println("DataBaseRequest getTournamentTable(): output query from DB: \n" + queryOutput);
         } catch (SQLException ex) {
@@ -210,6 +210,7 @@ public class DataBaseRequest {
         String queryOutput = "";
         try {
             while(result.next()){
+                int id_match = result.getInt("id_match");
                 String nameDivision = result.getString("name_division");
                 int tour = result.getInt("id_tour");
                 String teamHome = result.getString("team_home");
@@ -220,9 +221,9 @@ public class DataBaseRequest {
                 String stadium = result.getString("name_stadium");
                 String logoHome = result.getString("logo_home");
                 String logoGuest = result.getString("logo_guest");
-                queryOutput += nameDivision + " " + tour + " " + teamHome + " " + goalHome + " " +
+                queryOutput +=id_match + " " + nameDivision + " " + tour + " " + teamHome + " " + goalHome + " " +
                         goalGuest + " " + teamGuest + " " + mDate + " " + stadium + " " + logoHome + " " + logoGuest + "\n";
-                prevMatches.add(new PrevMatches(nameDivision, tour, teamHome, goalHome, goalGuest, teamGuest, logoHome, logoGuest));
+                prevMatches.add(new PrevMatches(id_match, nameDivision, tour, teamHome, goalHome, goalGuest, teamGuest, logoHome, logoGuest));
             }
             System.out.println("DataBaseRequest getPrevMatches(): output query  from DB:" + queryOutput);
         } catch (SQLException ex) {
@@ -280,6 +281,7 @@ public class DataBaseRequest {
         String queryOutput = "";
         try {
             while(result.next()){
+                int id_match = result.getInt("id_match");
                 String division = result.getString("name_division");
                 int tour = result.getInt("id_tour");
                 String t_home = result.getString("team_home");
@@ -288,9 +290,9 @@ public class DataBaseRequest {
                 String t_guest = result.getString("team_guest");
                 String l_home = result.getString("logo_home");
                 String l_guest = result.getString("logo_guest");
-                queryOutput+=division + " " + tour + " " + t_home + " " + g_home + " " + g_guest + " " +
+                queryOutput+=id_match + " " + division + " " + tour + " " + t_home + " " + g_home + " " + g_guest + " " +
                         t_guest + " " + l_home + " " + l_guest + "\n";
-                prevMatches.add(new PrevMatches(division, tour, t_home, g_home, g_guest, t_guest, l_home, l_guest));
+                prevMatches.add(new PrevMatches(id_match, division, tour, t_home, g_home, g_guest, t_guest, l_home, l_guest));
             }
             System.out.println("DataBaseRequest getAllMatches():output query  from DB: " + queryOutput);
         } catch (SQLException ex) {

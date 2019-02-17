@@ -22,6 +22,8 @@ public class Player {
     private int assist;
     private int yellowCard;
     private int redCard;
+    private int penalty_out;
+    private int own_goal;
     transient String playerUrlImage;
 
     public Player(String playerTeam, String playerName, String amplua, String birhtday, int number, 
@@ -41,6 +43,23 @@ public class Player {
         this.redCard = redCard;
     }
 
+    //констурктор для игроков в матче
+    public Player(int idPlayer, String playerTeam, String playerName, int number, int goal, int penalty, int assist, int yellowCard, int redCard, int penalty_out, int own_goal) {
+        this.idPlayer = idPlayer;
+        this.playerTeam = playerTeam;
+        this.playerName = playerName;
+        this.number = number;
+        this.goal = goal;
+        this.penalty = penalty;
+        this.assist = assist;
+        this.yellowCard = yellowCard;
+        this.redCard = redCard;
+        this.penalty_out = penalty_out;
+        this.own_goal = own_goal;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Player{" + "idPlayer=" + idPlayer + ", playerTeam=" + playerTeam + ", playerName=" + 
