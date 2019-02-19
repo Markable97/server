@@ -205,7 +205,7 @@ class ThreadClient implements Runnable {
                         System.out.println("Case team");
                         //DataBaseQuery baseQuery1 = new DataBaseQuery(id_division, id_team);
                         //playersArray = baseQuery1.getPlayerArray();
-                        DataBaseRequest baseRequest1 = new DataBaseRequest(id_team,messageLogic);
+                        DataBaseRequest baseRequest1 = new DataBaseRequest(id_team,messageLogic, 0);
                         playersArray = baseRequest1.getSquadInfo();
                         String playersToJson = gson.toJson(playersArray);
                         System.out.println("[4]Array of object from DB to JSON");
@@ -244,10 +244,17 @@ class ThreadClient implements Runnable {
                         }
                         break;
                     case "player":
+                        System.out.println("Case matches for player");
+                        DataBaseRequest request = new DataBaseRequest(null, messageLogic, id_division);
+                        playersArray = request.getSquadInfo();
+                        String playerInMatchToJson = gson.toJson(playersArray);
+                        System.out.println("[6]Array of object from DB to JSON");
+                        System.out.println(playerInMatchToJson);
+                        out.writeUTF(playerInMatchToJson);
                         break;
                     case "matches":
                         System.out.println("Case matches for team");
-                        DataBaseRequest dbr = new DataBaseRequest(id_team, messageLogic);
+                        DataBaseRequest dbr = new DataBaseRequest(id_team, messageLogic, 0);
                         //DataBaseQuery baseQueryAllMatches = new DataBaseQuery(id_division, id_team);
                         //allMatchesArray = baseQueryAllMatches.getAllMatches();
                         prevMatchesArray = dbr.getPrevMatches();

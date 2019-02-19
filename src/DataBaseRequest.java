@@ -27,8 +27,8 @@ public class DataBaseRequest {
 "       sc_con, \n" +
 "       points, \n" +
 "       logo \n" +
-"FROM football_main.v_tournament_table\n" +
-"where id_division = ?;";
+"       FROM football_main.v_tournament_table\n" +
+"       where id_division = ?;";
     private static String sqlPrevMatches = "SELECT id_match, name_division, \n" +
 "	id_division, \n" +
 "       id_tour, \n" +
@@ -41,9 +41,9 @@ public class DataBaseRequest {
 "       staff_name,\n" +
 "       logo_home,\n" +
 "       logo_guest\n" +
-"FROM football_main.v_matches \n" +
-"where (to_days(curdate()) - to_days(m_date) ) >= 0 and (to_days(curdate()) - to_days(m_date)) < 8\n" +
-"and id_division = ?;";
+"       FROM football_main.v_matches \n" +
+"       where (to_days(curdate()) - to_days(m_date) ) >= 0 and (to_days(curdate()) - to_days(m_date)) < 8\n" +
+"       and id_division = ?;";
     private static String sqlNextMatches = "SELECT name_division, \n" +
 "       id_tour, \n" +
 "       team_home, \n" +
@@ -51,8 +51,8 @@ public class DataBaseRequest {
 "       date_format(m_date,'%d-%m-%y %H:%i') as m_date, \n" +
 "       name_stadium, \n" +
 "       staff_name\n" +
-"FROM football_main.v_matches m\n" +
-"where curdate() < m_date and id_division = ?;";
+"       FROM football_main.v_matches m\n" +
+"       where curdate() < m_date and id_division = ?;";
     private static String sqlSquadInfo = "select team_name, \n" +
 "	name, \n" +
 "       name_amplua,\n" +
@@ -65,8 +65,8 @@ public class DataBaseRequest {
 "       yellow_card,\n" +
 "       red_card,\n" +
 "       photo\n" +
-"from v_squad\n" +
-"where team_name = ?;";
+"       from v_squad\n" +
+"       where team_name = ?;";
     private static String sqlAllMatches = "SELECT id_match, name_division, \n" +
 "	id_division, \n" +
 "       id_tour, \n" +
@@ -79,9 +79,21 @@ public class DataBaseRequest {
 "       staff_name,\n" +
 "       logo_home,\n" +
 "       logo_guest\n" +
-"FROM football_main.v_matches m\n" +
-"where team_home = ? or team_guest = ?\n" +
-"order by id_tour desc;";
+"       FROM football_main.v_matches m\n" +
+"       where team_home = ? or team_guest = ?\n" +
+"       order by id_tour desc;";
+    private static String sqlPlayersInMatch = "select pm.id_player, pm.name,\n" +
+"	   pm.team_name,\n" +
+"	   pm.number,\n" +
+"       pm.count_goals,\n" +
+"       pm.count_assist,\n" +
+"       pm.penalty,\n" +
+"       pm.penalty_out,\n" +
+"       pm.yellow,\n" +
+"       pm.red,\n" +
+"       pm.own_goal \n" +
+"       from v_players_in_matche pm\n" +
+"       where id_match  = ?";
     //------------------------------------------
     //------Переменные для коннекта-------------
     private static PreparedStatement prTournamentTable;
@@ -89,6 +101,7 @@ public class DataBaseRequest {
     private static PreparedStatement prNextMatches;
     private static PreparedStatement prSquadInfo;
     private static PreparedStatement prAllMatches;
+    private static PreparedStatement prPlayerInMatch;
     //------------------------------------------
     //------Переменные для вытаскивание результатат
     private static ResultSet rsTournamnetTable;
@@ -96,6 +109,7 @@ public class DataBaseRequest {
     private static ResultSet rsNextMathces;
     private static ResultSet rsSquadInfo;
     private static ResultSet rsAllMatches;
+    private static ResultSet rsPlayerInMatch;
     //------------------------------------------
     //-----Переменные для массивов объектов-----
     private static ArrayList<TournamentTable> tournamentTable = new ArrayList<TournamentTable>();
@@ -110,11 +124,13 @@ public class DataBaseRequest {
         connection(id);
     }
     
-    public DataBaseRequest(String name_team, String message)throws SQLException{
+    public DataBaseRequest(String name_team, String message, int id_match)throws SQLException{
         squadInfo.clear();
         prevMatches.clear();
         if(message.equals("team")){
            connection(name_team); 
+        }else if(message.equals("player")){
+            connection_playerInMatch(id_match);
         }else{
             connection_allMatches(name_team);
         }
@@ -179,6 +195,20 @@ public class DataBaseRequest {
         }
     }
     
+    private static void connection_playerInMatch(int id_match) throws SQLException{
+        try {
+            connect = DriverManager.getConnection(url, user, password);
+            prPlayerInMatch = connect.prepareCall(sqlPlayersInMatch);
+            prPlayerInMatch.setInt(1,id_match);
+            rsPlayerInMatch = prPlayerInMatch.executeQuery();
+            getPlayerInMatch(rsPlayerInMatch);
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connect.close();
+            rsPlayerInMatch.close();
+        }
+    }
     private static void getTournamentTable(ResultSet result){
         String queryOutput = "";
         try {
@@ -297,6 +327,32 @@ public class DataBaseRequest {
             System.out.println("DataBaseRequest getAllMatches():output query  from DB: " + queryOutput);
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private static void getPlayerInMatch(ResultSet result){
+        String queryOutput = "";
+        try{
+            while(result.next()){
+                int id = result.getInt("id_player");
+                String name = result.getString("name");
+                String team = result.getString("team_name");
+                int number = result.getInt("number");
+                int goal = result.getInt("count_goals"); 
+                int penalty = result.getInt("penalty");
+                int assist= result.getInt("count_assist");                
+                int yellow = result.getInt("yellow");
+                int red = result.getInt("red");
+                int penalty_out = result.getInt("penalty_out");
+                int own_goal = result.getInt("own_goal");
+                queryOutput+=id + " " + name + " " + team + " " + number + " " + goal + " " + assist + " " + penalty + 
+                        " " + penalty_out + " " + yellow + " " + red + " " + own_goal + "\n";
+                squadInfo.add(new Player(number, team, name, number, goal, penalty, assist, yellow, red, penalty_out,
+                        own_goal));
+            }
+            System.out.println("DataBaseRequest getPlayerInMatch():output query  from DB:" + queryOutput);
+        }catch(SQLException ex){
+             Logger.getLogger(DataBaseRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
