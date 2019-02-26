@@ -177,29 +177,47 @@ class ThreadClient implements Runnable {
                         System.out.println("Добавляю потоки для файлов");
                         String path = "D:\\Учеба\\Диплом\\Логотипы команд\\";
                         String pathBig = "D:\\Учеба\\Диплом\\Логотипы команд\\BigImage\\"; 
-                        out.writeInt(tournamentArray.size());//кол-во фоток
+                        int cnt_photo = 0; //кол-во существующих фоток
                         for(int i = 0; i < tournamentArray.size(); i++){
                             File image = new File(path + tournamentArray.get(i).getUrlImage());
                             File imageBig = new File(pathBig + tournamentArray.get(i).getUrlImage());
                             if(image.exists()){
                                 if(imageBig.exists()){
                                     System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
-                                    String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
-                                    out.writeUTF(nameImage);
-                                    byte[] byteArrayBig = new byte[(int)imageBig.length()];
-                                    BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
-                                    streamBig.read(byteArrayBig, 0, byteArrayBig.length);
-                                    streamBig.close();
-                                    out.writeInt(byteArrayBig.length);
-                                    out.write(byteArrayBig);
-                                    //out.flush();
+                                    cnt_photo++;    
                                 }else{
-                                    System.out.println("BIG Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                    System.out.println("BIG Файл "+ tournamentArray.get(i).getUrlImage() +" не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                                     }
                             }else{
-                                System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                System.out.println("Файл "+tournamentArray.get(i).getUrlImage() +"не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
                         }
+                        out.writeInt(cnt_photo);//кол-во фоток
+                        if(cnt_photo > 0){
+                            for(int i = 0; i < tournamentArray.size(); i++){
+                                File image = new File(path + tournamentArray.get(i).getUrlImage());
+                                File imageBig = new File(pathBig + tournamentArray.get(i).getUrlImage());
+                                if(image.exists()){
+                                    if(imageBig.exists()){
+                                        System.out.println("Файлы существует " + image.getName() + " " + imageBig.getName());
+                                        String nameImage = tournamentArray.get(i).getUrlImage().replace(".png",""); 
+                                        out.writeUTF(nameImage);
+                                        byte[] byteArrayBig = new byte[(int)imageBig.length()];
+                                        BufferedInputStream streamBig = new BufferedInputStream(new FileInputStream(imageBig));
+                                        streamBig.read(byteArrayBig, 0, byteArrayBig.length);
+                                        streamBig.close();
+                                        out.writeInt(byteArrayBig.length);
+                                        out.write(byteArrayBig);
+                                        //out.flush();
+                                    }else{
+                                        System.out.println("BIG Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                        }
+                                }else{
+                                    System.out.println("Файл не сущуствует!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                }
+                            }
+                        }
+
                         break;
                     case "team":
                         System.out.println("Case team");
