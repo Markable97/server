@@ -227,8 +227,8 @@ public class DataBaseRequest {
                 queryOutput += nameDivision + " " + teamName + " " + games  + " " + wins + " "  + draws + " "
                         + losses + " " + goals_scored + " " + goals_conceded + " "
                         + sc_con + " " + points + " " + logo + "\n";
-                tournamentTable.add(new TournamentTable(nameDivision, teamName, games, wins, draws, losses, 
-                        goals_scored, goals_conceded/*, sc_con*/, points, logo));
+                tournamentTable.add(new TournamentTable(nameDivision, teamName, games,  points, wins, draws, losses, 
+                        goals_scored, goals_conceded/*, sc_con*/,  logo));
             }
             System.out.println("DataBaseRequest getTournamentTable(): output query from DB: \n" + queryOutput);
         } catch (SQLException ex) {
